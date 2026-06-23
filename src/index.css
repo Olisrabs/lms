@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --font-sans: 'Inter', sans-serif;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f1115;
+  --primary: #534ab7;
+  --primary-foreground: #ffffff;
+  --secondary: #e2e8f0;
+  --accent: #0f7a5a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: rgba(0,0,0,0.1);
+  --card: rgba(255,255,255,0.9);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: #0f1115;
+  --foreground: #f8fafc;
+  --primary: #6b62ca;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --accent: #0f7a5a;
+  --muted: #334155;
+  --muted-foreground: #94a3b8;
+  --border: rgba(255,255,255,0.08);
+  --card: rgba(15,17,21,0.85);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@utility glass {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+}
+
+@utility glass-card {
+  background: var(--card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+}
+
+.dark .glass-card {
+  background: linear-gradient(145deg, rgba(30,41,59,0.4) 0%, rgba(15,17,21,0.2) 100%);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+
+@utility text-gradient {
+  background: linear-gradient(to right, var(--primary), #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
