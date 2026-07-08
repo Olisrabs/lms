@@ -92,36 +92,6 @@ export default function StudentDashboardOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content Column */}
         <div className="lg:col-span-2 space-y-6">
-          
-          {/* Upcoming Class */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="glass-card rounded-2xl p-6 border-l-4 border-l-accent"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="bg-accent/10 text-accent text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide">Starting in 45m</span>
-                </div>
-                <h2 className="text-xl font-bold">Advanced React Patterns</h2>
-                <p className="text-muted-foreground text-sm">Instructor: Sarah Drasner</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-lg">10:00 AM</p>
-                <p className="text-sm text-muted-foreground">Today</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link to="/student/schedule" className="bg-accent text-white px-6 py-2.5 rounded-xl font-medium hover:bg-accent/90 transition-colors flex items-center gap-2">
-                <PlayCircle size={18} /> Join Class
-              </Link>
-              <Link to="/student/schedule" className="bg-secondary text-foreground px-4 py-2.5 rounded-xl font-medium hover:bg-secondary/80 transition-colors">
-                View Details
-              </Link>
-            </div>
-          </motion.div>
 
           {/* Learning Progress */}
           <motion.div

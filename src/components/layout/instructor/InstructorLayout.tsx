@@ -4,6 +4,7 @@ import { Menu, Search, Bell, ChevronDown, User, Settings, LogOut } from 'lucide-
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import InstructorSidebar from './InstructorSidebar';
+import ThemeToggle from '../../ThemeToggle';
 
 export default function InstructorLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,6 +36,9 @@ export default function InstructorLayout() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
+
+            <ThemeToggle />
+            
             <div className="flex items-center gap-1 sm:gap-2 border-r border-border pr-2 sm:pr-4">
               <Link to="/instructor/announcements" className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary/80 rounded-xl transition-colors relative">
                 <Bell size={20} />

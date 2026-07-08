@@ -1,4 +1,4 @@
-import { Menu, Search, Bell, MessageSquare, Clock, ChevronDown, User, Settings as SettingsIcon, LogOut } from 'lucide-react';
+import { Menu, Search, Bell, ChevronDown, User, Settings as SettingsIcon, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -32,14 +32,6 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="hidden md:flex items-center gap-2 bg-accent/10 text-accent px-3 py-1.5 rounded-full text-xs font-semibold">
-          <Clock size={14} />
-          <span>Next Class: React Hooks (10:00 AM)</span>
-        </div>
-
-        <button className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors hidden sm:block">
-          <MessageSquare size={20} />
-        </button>
 
         <Link 
           to="/student/announcements"

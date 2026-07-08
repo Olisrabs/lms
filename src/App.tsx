@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import DashboardLayout from './components/layout/admin/DashboardLayout';
 import DashboardOverview from './pages/admin/DashboardOverview';
 import ProgramsPage from './pages/admin/ProgramsPage';
@@ -18,6 +20,9 @@ import SettingsPage from './pages/admin/SettingsPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import LandingPage from './pages/LandingPage';
+import StaffSignInPage from './pages/staff/StaffSignInPage';
+import InstructorSignUpPage from './pages/staff/InstructorSignUpPage';
+import AdminSignUpPage from './pages/staff/AdminSignUpPage';
 
 // Instructor Imports
 import InstructorLayout from './components/layout/instructor/InstructorLayout';
@@ -36,6 +41,7 @@ import InstructorPerformancePage from './pages/instructor/InstructorPerformanceP
 import InstructorAnnouncementsPage from './pages/instructor/InstructorAnnouncementsPage';
 import InstructorProfilePage from './pages/instructor/InstructorProfilePage';
 import InstructorSettingsPage from './pages/instructor/InstructorSettingsPage';
+import InstructorOnboardingPage from './pages/instructor/InstructorOnboardingPage';
 
 // Student Imports
 import StudentLayout from './components/layout/student/StudentLayout';
@@ -57,19 +63,30 @@ import StudentOnboardingPage from './pages/student/StudentOnboardingPage';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <Routes>
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         
+        {/* Staff Routes */}
+        <Route path="/staff" element={<StaffSignInPage />} />
+        <Route path="/staff/signup" element={<InstructorSignUpPage />} />
+        <Route path="/staff/admin" element={<AdminSignUpPage />} />
+        
         {/* Onboarding Route */}
         <Route path="/onboarding" element={<StudentOnboardingPage />} />
+        <Route path="/instructor/onboarding" element={<InstructorOnboardingPage />} />
 
         {/* Landing Page Route */}
         <Route path="/" element={<LandingPage />} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<DashboardLayout />}>
+        <Route path="/admin" element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<DashboardOverview />} />
           <Route path="programs" element={<ProgramsPage />} />
           <Route path="cohorts" element={<CohortsPage />} />
@@ -89,7 +106,11 @@ function App() {
         </Route>
 
         {/* Student Routes */}
-        <Route path="/student" element={<StudentLayout />}>
+        <Route path="/student" element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <StudentLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<StudentDashboardOverview />} />
           <Route path="courses" element={<StudentCoursesPage />} />
           <Route path="courses/:id" element={<StudentCourseDetailsPage />} />
@@ -107,7 +128,11 @@ function App() {
         </Route>
 
         {/* Instructor Routes */}
-        <Route path="/instructor" element={<InstructorLayout />}>
+        <Route path="/instructor" element={
+          <ProtectedRoute allowedRoles={['instructor']}>
+            <InstructorLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<InstructorDashboardOverview />} />
           <Route path="courses" element={<InstructorCoursesPage />} />
           <Route path="modules" element={<InstructorModulesPage />} />
@@ -128,6 +153,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

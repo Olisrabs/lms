@@ -1,4 +1,4 @@
-import { Menu, Search, Bell, MessageSquare, Zap, ChevronDown, User, Settings, LogOut } from 'lucide-react';
+import { Menu, Search, Bell, ChevronDown, User, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';

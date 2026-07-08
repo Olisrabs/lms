@@ -1,22 +1,15 @@
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
+import {  
   FileText, CheckSquare, Trophy
 } from 'lucide-react';
 
 export default function InstructorDashboardOverview() {
   const stats = [
-    { label: 'Classes This Week', value: '12', icon: Calendar, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: 'Pending Reviews', value: '38', icon: FileText, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+    { label: 'Total Students', value: '38', icon: FileText, color: 'text-orange-500', bg: 'bg-orange-500/10' },
     { label: 'Pending Test Reviews', value: '15', icon: CheckSquare, color: 'text-red-500', bg: 'bg-red-500/10' },
     { label: 'Active Projects', value: '8', icon: Trophy, color: 'text-green-500', bg: 'bg-green-500/10' }
   ];
 
-  const schedule = [
-    { time: '10:00 AM', title: 'React Fundamentals', cohort: 'Frontend Cohort A', type: 'Live Class' },
-    { time: '02:00 PM', title: 'Advanced State Management', cohort: 'Frontend Cohort B', type: 'Live Class' },
-    { time: '04:00 PM', title: 'Q&A Session', cohort: 'All Frontend', type: 'Mentorship' },
-  ];
 
   return (
     <div className="space-y-6">
@@ -49,28 +42,6 @@ export default function InstructorDashboardOverview() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card rounded-2xl p-6 border border-border">
-            <h2 className="text-xl font-bold mb-4">Today's Schedule</h2>
-            <div className="space-y-4">
-              {schedule.map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 border border-border">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 text-center">
-                      <span className="text-sm font-bold text-primary">{item.time}</span>
-                    </div>
-                    <div className="w-px h-10 bg-border"></div>
-                    <div>
-                      <h3 className="font-bold">{item.title}</h3>
-                      <p className="text-sm text-muted-foreground">{item.cohort} • {item.type}</p>
-                    </div>
-                  </div>
-                  <button className="px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
-                    Join
-                  </button>
-                </div>
-              ))}
-            </div>
-          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card rounded-2xl p-6 border border-border">
             <div className="flex items-center justify-between mb-4">
