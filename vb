@@ -1,0 +1,2 @@
+On the onboarding page, the select cohort option should not be shown. It should only show the programs available for any active cohort and if there's no active cohort or the cohort registration is closed, it should display a message to tell users registration for cohort is closed that they should check back another time. 
+In the admin dashboard, when creating a cohort, add an input to collect the closing date for the registration and use the date to perform the closing of the registration on the users onboarding.

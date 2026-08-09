@@ -1,8 +1,9 @@
 import { Menu, Search, Bell, ChevronDown, User, Settings as SettingsIcon, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ThemeToggle from '../../ThemeToggle';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface TopbarProps {
   onMenuClick: () => void;
@@ -10,6 +11,18 @@ interface TopbarProps {
 
 export default function StudentTopbar({ onMenuClick }: TopbarProps) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    setShowProfileMenu(false);
+    await signOut();
+    navigate('/signin', { replace: true });
+  };
+
+  const initials = user?.full_name
+    ? user.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'ST';
 
   return (
     <header className="h-16 fixed top-0 right-0 left-0 lg:left-64 bg-background/60 backdrop-blur-xl border-b border-border z-30 flex items-center justify-between px-4 sm:px-6">
@@ -49,7 +62,7 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
             className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-secondary transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent border-2 border-background shadow-md flex items-center justify-center text-white text-sm font-bold overflow-hidden">
-              JD
+              {initials}
             </div>
             <ChevronDown size={16} className="text-muted-foreground" />
           </button>
@@ -82,7 +95,10 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
                     <SettingsIcon size={16} /> Settings
                   </Link>
                   <div className="h-px bg-border my-1" />
-                  <button className="flex items-center gap-2 px-4 py-2 hover:bg-red-500/10 text-red-500 transition-colors text-sm w-full text-left">
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-red-500/10 text-red-500 transition-colors text-sm w-full text-left"
+                  >
                     <LogOut size={16} /> Logout
                   </button>
                 </motion.div>

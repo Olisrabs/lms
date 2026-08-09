@@ -10,13 +10,13 @@ import type { JwtPayload, UserRole, UserStatus } from '../types/database';
 
 export function signAccessToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string {
   return jwt.sign(payload, config.jwt.secret, {
-    expiresIn: config.jwt.expiresIn as string,
+    expiresIn: config.jwt.expiresIn as any,
   });
 }
 
 export function signRefreshToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string {
   return jwt.sign(payload, config.jwt.refreshSecret, {
-    expiresIn: config.jwt.refreshExpiresIn as string,
+    expiresIn: config.jwt.refreshExpiresIn as any,
   });
 }
 
@@ -28,11 +28,17 @@ export function verifyRefreshToken(token: string): JwtPayload {
   return jwt.verify(token, config.jwt.refreshSecret) as JwtPayload;
 }
 
+import crypto from 'crypto';
+
+function hashToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
 // ─── Refresh token persistence ────────────────────────────────────────────────
 
 /**
  * Persist a refresh token hash in DB.
- * Uses bcrypt so even a DB breach doesn't expose raw tokens.
+ * Uses SHA-256 hash so it is queryable while avoiding raw token storage.
  */
 export async function storeRefreshToken(
   userId: string,
@@ -40,7 +46,7 @@ export async function storeRefreshToken(
   ipAddress?: string,
   userAgent?: string
 ): Promise<void> {
-  const hash = await bcrypt.hash(rawToken, 6); // 6 rounds — quick to hash for tokens
+  const hash = hashToken(rawToken);
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
   await supabaseAdmin
@@ -61,12 +67,13 @@ export async function storeRefreshToken(
  */
 export async function rotateRefreshToken(
   userId: string,
-  oldTokenHash: string
+  oldTokenRaw: string
 ): Promise<void> {
+  const hash = hashToken(oldTokenRaw);
   const { data } = await supabaseAdmin
     .from('refresh_tokens')
     .select('id, revoked')
-    .eq('token_hash', oldTokenHash)
+    .eq('token_hash', hash)
     .single();
 
   if (!data) throw new Error('Refresh token not found');

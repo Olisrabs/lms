@@ -11,16 +11,40 @@ router.use(authenticate);
 // ─── GET /groups — List groups for a cohort ───────────────────────────────────
 router.get(
   '/',
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
+
+    if (!cohortId) {
+      const { data, error } = await supabaseAdmin
+        .from('groups')
+        .select(`
+          id, name, description, metadata, created_at, cohort_id,
+          cohorts:cohort_id (
+            id, name, program_id,
+            programs:program_id (id, name)
+          ),
+          group_members (
+            role, joined_at,
+            users:student_id (id, full_name, email, avatar_url)
+          )
+        `)
+        .order('name');
+      if (error) { res.status(500).json({ error: error.message }); return; }
+      res.json(data);
+      return;
+    }
 
     const data = await cache.remember(`groups:cohort:${cohortId}`, 120, async () => {
       const { data, error } = await supabaseAdmin
         .from('groups')
         .select(`
-          id, name, description, metadata, created_at,
+          id, name, description, metadata, created_at, cohort_id,
+          cohorts:cohort_id (
+            id, name, program_id,
+            programs:program_id (id, name)
+          ),
           group_members (
             role, joined_at,
             users:student_id (id, full_name, email, avatar_url)
@@ -32,6 +56,36 @@ router.get(
       return data;
     });
 
+    res.json(data);
+  }
+);
+
+// ─── GET /groups/mine — Student's own groups ──────────────────────────────────
+router.get(
+  '/mine',
+  async (req: Request, res: Response): Promise<void> => {
+    const userId = req.user!.sub;
+    const cacheKey = `groups:student:${userId}`;
+    const cached = await cache.get(cacheKey);
+    if (cached) { res.json(cached); return; }
+
+    const { data, error } = await supabaseAdmin
+      .from('group_members')
+      .select(`
+        role, joined_at,
+        groups:group_id (
+          id, name, description, cohort_id,
+          cohorts:cohort_id (id, name),
+          group_members (
+            role,
+            users:student_id (id, full_name, email, avatar_url)
+          )
+        )
+      `)
+      .eq('student_id', userId);
+
+    if (error) { res.status(500).json({ error: error.message }); return; }
+    await cache.set(cacheKey, data, 60);
     res.json(data);
   }
 );

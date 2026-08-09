@@ -11,10 +11,25 @@ router.use(authenticate);
 // ─── GET /schedule — Get schedule for a cohort ───────────────────────────────
 router.get(
   '/',
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
+
+    if (!cohortId) {
+      const { data, error } = await supabaseAdmin
+        .from('class_schedules')
+        .select(`
+          id, title, schedule_type, start_time, end_time, location, meeting_url, is_cancelled,
+          users:instructor_id (id, full_name, avatar_url),
+          courses:course_id (id, title)
+        `)
+        .eq('is_cancelled', false)
+        .order('start_time');
+      if (error) { res.status(500).json({ error: error.message }); return; }
+      res.json(data);
+      return;
+    }
 
     const data = await cache.remember(`schedule:cohort:${cohortId}`, 60, async () => {
       const { data, error } = await supabaseAdmin
@@ -68,7 +83,11 @@ router.post(
 
     if (error) { res.status(500).json({ error: error.message }); return; }
 
-    await cache.del(`schedule:cohort:${cohort_id}`);
+    // Bust both the cohort cache AND the instructor's personal timetable cache
+    await Promise.all([
+      cache.del(`schedule:cohort:${cohort_id}`),
+      cache.del(`schedule:instructor:${req.user!.sub}`),
+    ]);
     res.status(201).json(data);
   }
 );

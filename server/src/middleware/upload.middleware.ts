@@ -144,23 +144,43 @@ export async function processAndUpload(
   const storagePath = `${folder}/${objectId}${contentCategory === 'image' ? '.webp' : ext}`;
 
   // ── Upload to Supabase Storage ────────────────────────────────────────────
-  const { error } = await supabaseAdmin.storage
-    .from(config.upload.bucket)
-    .upload(storagePath, finalBuffer, {
-      contentType: finalMime,
-      cacheControl: '3600',
-      upsert: false,
-    });
+  let public_url = '';
 
-  if (error) throw new Error(`Storage upload failed: ${error.message}`);
+  if (config.supabase.url?.includes('your-project-ref')) {
+    public_url = `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60`;
+    logger.warn('Mock upload active: using placeholder public URL');
+  } else {
+    try {
+      const { error } = await supabaseAdmin.storage
+        .from(config.upload.bucket)
+        .upload(storagePath, finalBuffer, {
+          contentType: finalMime,
+          cacheControl: '3600',
+          upsert: false,
+        });
 
-  const { data: urlData } = supabaseAdmin.storage
-    .from(config.upload.bucket)
-    .getPublicUrl(storagePath);
+      if (error) {
+        throw error;
+      }
+
+      const { data: urlData } = supabaseAdmin.storage
+        .from(config.upload.bucket)
+        .getPublicUrl(storagePath);
+
+      public_url = urlData?.publicUrl || '';
+    } catch (err: any) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('Storage upload failed, falling back to placeholder image in dev', { error: err.message });
+        public_url = `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60`;
+      } else {
+        throw new Error(`Storage upload failed: ${err.message}`);
+      }
+    }
+  }
 
   return {
     storage_path: storagePath,
-    public_url: urlData.publicUrl,
+    public_url,
     file_size_kb: Math.round(finalBuffer.byteLength / 1024),
     content_type: contentCategory,
     original_name: file.originalname,

@@ -12,14 +12,14 @@ router.use(authenticate);
 // ─── GET /capstones — List capstones for a cohort ─────────────────────────────
 router.get(
   '/',
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
     const role = req.user!.role;
     const userId = req.user!.sub;
 
-    const cacheKey = `capstones:cohort:${cohortId}:${role}`;
+    const cacheKey = `capstones:cohort:${cohortId || 'all'}:${role}`;
     const cached = await cache.get(cacheKey);
     if (cached) { res.json(cached); return; }
 
@@ -30,8 +30,11 @@ router.get(
         groups:group_id (id, name),
         users:student_id (id, full_name, email)
       `)
-      .eq('cohort_id', cohortId)
       .order('created_at', { ascending: false });
+
+    if (cohortId) {
+      q = q.eq('cohort_id', cohortId);
+    }
 
     // Students only see their own capstone
     if (role === 'student') {

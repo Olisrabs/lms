@@ -11,12 +11,12 @@ router.use(authenticate);
 // ─── GET /tests — List published tests for a cohort ───────────────────────────
 router.get(
   '/',
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
     const role = req.user!.role;
-    const cacheKey = `tests:cohort:${cohortId}:${role}`;
+    const cacheKey = `tests:cohort:${cohortId || 'all'}:${role}`;
 
     const cached = await cache.get(cacheKey);
     if (cached) { res.json(cached); return; }
@@ -24,8 +24,11 @@ router.get(
     let q = supabaseAdmin
       .from('tests')
       .select('id, title, description, duration_mins, max_score, pass_score, start_time, end_time, is_published, shuffle_questions, created_at')
-      .eq('cohort_id', cohortId)
       .order('start_time');
+
+    if (cohortId) {
+      q = q.eq('cohort_id', cohortId);
+    }
 
     // Students only see published tests; also strip the questions field
     if (role === 'student') {

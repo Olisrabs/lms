@@ -1,13 +1,30 @@
 import { motion } from 'framer-motion';
 import { Calendar as CalendarIcon, Clock, Video, Plus } from 'lucide-react';
 
-const schedule = [
-  { id: 1, title: 'Advanced React Patterns', instructor: 'Sarah Drasner', date: 'Today, Oct 24', time: '10:00 AM - 11:30 AM', status: 'upcoming' },
-  { id: 2, title: 'State Management with Redux', instructor: 'Dan Abramov', date: 'Tomorrow, Oct 25', time: '02:00 PM - 04:00 PM', status: 'upcoming' },
-  { id: 3, title: 'Next.js Fundamentals', instructor: 'Lee Robinson', date: 'Thu, Oct 26', time: '10:00 AM - 12:00 PM', status: 'upcoming' },
-];
+import { useState, useEffect } from 'react';
+import { mockDb } from '../../lib/mockDb';
 
 export default function StudentSchedulePage() {
+  const [schedule, setSchedule] = useState<any[]>([]);
+
+  useEffect(() => {
+    const timetable = mockDb.getTimetable();
+    const flatList: any[] = [];
+    let id = 1;
+    Object.entries(timetable).forEach(([day, slots]: [string, any]) => {
+      Object.entries(slots).forEach(([time, details]: [string, any]) => {
+        flatList.push({
+          id: id++,
+          title: details.title,
+          instructor: details.instructor,
+          date: `${day}, Weekly`,
+          time: `${time} - ${time.replace('00', '30').replace(' AM', ':30 AM').replace(' PM', ':30 PM')}`,
+          status: 'upcoming'
+        });
+      });
+    });
+    setSchedule(flatList);
+  }, []);
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

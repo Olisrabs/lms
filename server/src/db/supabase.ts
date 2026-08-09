@@ -15,7 +15,7 @@ import type { Database } from '../types/database';
  *
  * Never expose supabaseAdmin to the client.
  */
-export const supabaseAnon = createClient<Database>(
+export const supabaseAnon = createClient<any>(
   config.supabase.url,
   config.supabase.anonKey,
   {
@@ -24,7 +24,7 @@ export const supabaseAnon = createClient<Database>(
   }
 );
 
-export const supabaseAdmin = createClient<Database>(
+export const supabaseAdmin = createClient<any>(
   config.supabase.url,
   config.supabase.serviceRoleKey,
   {

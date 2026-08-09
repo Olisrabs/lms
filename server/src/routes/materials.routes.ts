@@ -9,14 +9,18 @@ import { upload, uploadToSupabase } from '../middleware/upload.middleware';
 const router = Router();
 router.use(authenticate);
 
-// ─── GET /materials — List materials by module ────────────────────────────────
+// ─── GET /materials — List materials ──────────────────────────────────────────
 router.get(
   '/',
-  [query('module_id').isUUID()],
+  [
+    query('module_id').optional().isUUID(),
+    query('cohort_id').optional().isUUID(),
+  ],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const moduleId = req.query.module_id as string;
-    const cacheKey = `materials:module:${moduleId}`;
+    const moduleId = req.query.module_id as string | undefined;
+    const cohortId = req.query.cohort_id as string | undefined;
+    const cacheKey = `materials:${cohortId || 'all'}:${moduleId || 'all'}:${req.user!.role}`;
 
     const cached = await cache.get(cacheKey);
     if (cached) {
@@ -26,9 +30,15 @@ router.get(
 
     let q = supabaseAdmin
       .from('materials')
-      .select('id, title, content_type, file_size_kb, duration_sec, sort_order, is_published, metadata, created_at')
-      .eq('module_id', moduleId)
-      .order('sort_order');
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (moduleId) {
+      q = q.eq('module_id', moduleId);
+    }
+    if (cohortId) {
+      q = q.eq('cohort_id', cohortId);
+    }
 
     // Students only see published materials
     if (req.user!.role === 'student') {
@@ -41,7 +51,7 @@ router.get(
       return;
     }
 
-    await cache.set(cacheKey, data, 120);
+    await cache.set(cacheKey, data, 60);
     res.json(data);
   }
 );
@@ -53,9 +63,12 @@ router.post(
   upload.single('file'),
   uploadToSupabase('materials'),
   [
-    body('module_id').isUUID(),
     body('title').trim().notEmpty(),
-    body('sort_order').optional().isInt({ min: 0 }),
+    body('cohort_id').optional().isUUID(),
+    body('module_id').optional().isUUID(),
+    body('description').optional().isString(),
+    body('file_url').optional().isString(),
+    body('file_type').optional().isString(),
   ],
   validate,
   async (req: Request, res: Response): Promise<void> => {
@@ -68,30 +81,35 @@ router.post(
       metadata: Record<string, unknown>;
     }[] }).uploadResults;
 
-    if (!results?.length) {
-      res.status(400).json({ error: 'File is required' });
-      return;
-    }
-
-    const file = results[0];
-    const { module_id, title, sort_order } = req.body as {
-      module_id: string;
+    const file = results?.[0];
+    const { title, description, cohort_id, module_id, file_url, file_type } = req.body as {
       title: string;
-      sort_order?: number;
+      description?: string;
+      cohort_id?: string;
+      module_id?: string;
+      file_url?: string;
+      file_type?: string;
     };
+
+    const finalUrl = file?.public_url || file_url || '';
+    const finalType = file?.content_type || file_type || 'document';
 
     const { data, error } = await supabaseAdmin
       .from('materials')
       .insert({
-        module_id,
         title,
-        content_type: file.content_type as 'video' | 'pdf' | 'image' | 'audio' | 'document',
-        storage_path: file.storage_path,
-        original_name: file.original_name,
-        file_size_kb: file.file_size_kb,
-        metadata: file.metadata,
-        sort_order: sort_order || 0,
+        description,
+        cohort_id: cohort_id || null,
+        module_id: module_id || null,
+        file_url: finalUrl,
+        file_type: finalType,
+        content_type: finalType,
+        storage_path: file?.storage_path || null,
+        original_name: file?.original_name || title,
+        file_size_kb: file?.file_size_kb || 0,
+        uploader_id: req.user!.sub,
         uploaded_by: req.user!.sub,
+        is_published: true,
       })
       .select()
       .single();
@@ -101,10 +119,8 @@ router.post(
       return;
     }
 
-    // Invalidate module materials cache
-    await cache.del(`materials:module:${module_id}`);
-
-    res.status(201).json({ material: data, public_url: file.public_url });
+    await cache.invalidatePattern('materials:*');
+    res.status(201).json(data);
   }
 );
 

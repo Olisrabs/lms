@@ -12,23 +12,68 @@ router.use(authenticate);
 // ─── GET /assignments — List assignments for a cohort ─────────────────────────
 router.get(
   '/',
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
     const role = req.user!.role;
-    const cacheKey = `assignments:cohort:${cohortId}:${role}`;
+    const userId = req.user!.sub;
 
+    // For students, include their own submission so the UI can show status/grade
+    if (role === 'student') {
+      let q = supabaseAdmin
+        .from('assignments')
+        .select(`
+          id, title, description, assignment_type, max_score, due_date, is_published, attachments, created_at,
+          submissions!inner(id, status, score, feedback, content, submitted_at, graded_at)
+        `)
+        .eq('is_published', true)
+        .eq('submissions.student_id', userId);
+
+      if (cohortId) q = q.eq('cohort_id', cohortId);
+
+      // Also fetch assignments that have NO submission yet (left join workaround)
+      let qAll = supabaseAdmin
+        .from('assignments')
+        .select(`
+          id, title, description, assignment_type, max_score, due_date, is_published, attachments, created_at
+        `)
+        .eq('is_published', true)
+        .order('due_date');
+
+      if (cohortId) qAll = qAll.eq('cohort_id', cohortId);
+
+      const [{ data: submitted, error: e1 }, { data: all, error: e2 }] = await Promise.all([q, qAll]);
+      if (e1 || e2) { res.status(500).json({ error: (e1 || e2)?.message }); return; }
+
+      // Merge: enrich all assignments with the student's own submission if any
+      const submissionMap = new Map<string, any>();
+      for (const a of (submitted || [])) {
+        if ((a as any).submissions?.length) {
+          submissionMap.set(a.id, (a as any).submissions[0]);
+        }
+      }
+
+      const enriched = (all || []).map((a: any) => ({
+        ...a,
+        submissions: submissionMap.has(a.id) ? [submissionMap.get(a.id)] : [],
+      }));
+
+      res.json(enriched);
+      return;
+    }
+
+    // Instructors / admins — simple list
+    const cacheKey = `assignments:cohort:${cohortId || 'all'}:${role}`;
     const cached = await cache.get(cacheKey);
     if (cached) { res.json(cached); return; }
 
     let q = supabaseAdmin
       .from('assignments')
       .select('id, title, description, assignment_type, max_score, due_date, is_published, attachments, created_at')
-      .eq('cohort_id', cohortId)
       .order('due_date');
 
-    if (role === 'student') q = q.eq('is_published', true);
+    if (cohortId) q = q.eq('cohort_id', cohortId);
 
     const { data, error } = await q;
     if (error) { res.status(500).json({ error: error.message }); return; }
@@ -37,6 +82,26 @@ router.get(
     res.json(data);
   }
 );
+
+// ─── GET /assignments/submissions — List student submissions for instructor ───
+router.get(
+  '/submissions',
+  authorize('admin', 'instructor'),
+  async (req: Request, res: Response): Promise<void> => {
+    const { data, error } = await supabaseAdmin
+      .from('submissions')
+      .select(`
+        id, assignment_id, student_id, content, attachments, status, score, feedback, submitted_at, graded_at,
+        student:student_id (id, full_name, email, avatar_url),
+        assignment:assignment_id (id, title, max_score, due_date, cohort_id)
+      `)
+      .order('submitted_at', { ascending: false });
+
+    if (error) { res.status(500).json({ error: error.message }); return; }
+    res.json(data);
+  }
+);
+
 
 // ─── POST /assignments — Create assignment ────────────────────────────────────
 router.post(

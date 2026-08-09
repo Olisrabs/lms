@@ -1,17 +1,18 @@
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  LayoutDashboard, GraduationCap, 
+  LayoutDashboard, GraduationCap, BookOpen, 
   FileText, CheckSquare, Trophy, UsersRound,
   X, ChevronRight,
-  CalendarDays, Award
+  CalendarDays, Award, ClipboardCheck
 } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
   { label: 'Dashboard', path: '/student', icon: LayoutDashboard, exact: true },
-  { label: 'Courses', path: '/student/courses', icon: GraduationCap },
+  { label: 'Classes', path: '/student/classes', icon: BookOpen },
   { label: 'Timetable', path: '/student/timetable', icon: CalendarDays },
+  { label: 'Attendance', path: '/student/attendance', icon: ClipboardCheck },
   { label: 'Assignments', path: '/student/assignments', icon: FileText },
   { label: 'Tests & Quizzes', path: '/student/tests', icon: CheckSquare },
   { label: 'Groups', path: '/student/groups', icon: UsersRound },

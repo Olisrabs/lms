@@ -1,5 +1,5 @@
 -- ============================================================
--- EduLe LMS — Full Database Schema
+-- Make It Simple LMS — Full Database Schema
 -- Engine: PostgreSQL (Supabase)
 -- 
 -- Design principles:

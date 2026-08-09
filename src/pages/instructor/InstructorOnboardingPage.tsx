@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Briefcase, BookOpen, FileText, CheckCircle2, 
+  Briefcase, BookOpen, CheckCircle2, 
   ArrowRight, Loader2
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -61,7 +61,7 @@ export default function InstructorOnboardingPage() {
       <header className="px-6 py-6 border-b border-border bg-background/50 backdrop-blur-md z-10 flex justify-center lg:justify-start">
         <div className="flex items-center gap-2">
           <BookOpen size={28} className="text-primary" />
-          <span className="text-2xl font-extrabold tracking-tight text-foreground">EduLe Staff</span>
+          <span className="text-2xl font-extrabold tracking-tight text-foreground">Make It Simple Staff</span>
         </div>
       </header>
 
@@ -203,7 +203,7 @@ export default function InstructorOnboardingPage() {
                   <CheckCircle2 size={48} />
                 </div>
                 <h2 className="text-3xl font-bold mb-2">You're all set!</h2>
-                <p className="text-muted-foreground">Your instructor profile has been setup. Welcome to the EduLe teaching community.</p>
+                <p className="text-muted-foreground">Your instructor profile has been setup. Welcome to the Make It Simple teaching community.</p>
               </motion.div>
             )}
 

@@ -1,21 +1,36 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react';
+import { BookOpen, ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function InstructorSignUpPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const { signUp } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    // Simulate signup
-    setTimeout(() => {
-      setLoading(false);
-      navigate('/instructor/onboarding');
-    }, 1500);
+
+    const fullName = `${firstName} ${lastName}`.trim();
+    const { success, error: apiError } = await signUp(email, password, fullName, 'instructor');
+    setLoading(false);
+
+    if (!success) {
+      setError(apiError || 'Sign up failed. Please try again.');
+      return;
+    }
+
+    navigate('/instructor/onboarding');
   };
 
   const inputClass = "w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all";
@@ -37,6 +52,17 @@ export default function InstructorSignUpPage() {
         
         <div className="glass-card p-8 rounded-3xl">
           <form onSubmit={handleSignUp} className="space-y-4">
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl px-4 py-3 text-sm"
+              >
+                <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                <span>{error}</span>
+              </motion.div>
+            )}
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-muted-foreground mb-1.5">First Name</label>
@@ -44,6 +70,8 @@ export default function InstructorSignUpPage() {
                   type="text" 
                   placeholder="John" 
                   className={inputClass} 
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   required 
                 />
               </div>
@@ -53,6 +81,8 @@ export default function InstructorSignUpPage() {
                   type="text" 
                   placeholder="Doe" 
                   className={inputClass} 
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   required 
                 />
               </div>
@@ -64,6 +94,8 @@ export default function InstructorSignUpPage() {
                 type="email" 
                 placeholder="instructor@academy.edu" 
                 className={inputClass} 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required 
               />
             </div>
@@ -75,6 +107,8 @@ export default function InstructorSignUpPage() {
                   type={showPassword ? 'text' : 'password'} 
                   placeholder="Create a strong password" 
                   className={inputClass} 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required 
                 />
                 <button 

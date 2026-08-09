@@ -3,60 +3,14 @@ import { Search, PlayCircle, Clock, BookOpen, ChevronRight, Award } from 'lucide
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const courses = [
-  {
-    id: 1,
-    title: 'HTML & CSS Fundamentals',
-    instructor: 'Sarah Drasner',
-    progress: 100,
-    modules: 5,
-    lessons: 24,
-    status: 'completed',
-    thumbnail: 'bg-gradient-to-br from-orange-400 to-orange-600'
-  },
-  {
-    id: 2,
-    title: 'JavaScript Essentials',
-    instructor: 'Kyle Simpson',
-    progress: 85,
-    modules: 8,
-    lessons: 42,
-    status: 'in-progress',
-    thumbnail: 'bg-gradient-to-br from-yellow-400 to-yellow-600'
-  },
-  {
-    id: 3,
-    title: 'React.js & Hooks',
-    instructor: 'Dan Abramov',
-    progress: 30,
-    modules: 6,
-    lessons: 30,
-    status: 'in-progress',
-    thumbnail: 'bg-gradient-to-br from-cyan-400 to-cyan-600'
-  },
-  {
-    id: 4,
-    title: 'Advanced State Management',
-    instructor: 'Mark Erikson',
-    progress: 0,
-    modules: 4,
-    lessons: 18,
-    status: 'locked',
-    thumbnail: 'bg-gradient-to-br from-purple-400 to-purple-600'
-  }
-];
+import { mockDb } from '../../lib/mockDb';
 
 export default function StudentCoursesPage() {
-  const [coursesData, setCoursesData] = useState(courses);
+  const [coursesData, setCoursesData] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    if (localStorage.getItem('course_1_completed') === 'true') {
-      setCoursesData(prev => prev.map(c => 
-        c.id === 1 ? { ...c, status: 'completed', progress: 100 } :
-        c.id === 4 ? { ...c, status: 'in-progress' } : c
-      ));
-    }
+    setCoursesData(mockDb.getCourses());
   }, []);
 
   const filteredCourses = coursesData.filter(course => 

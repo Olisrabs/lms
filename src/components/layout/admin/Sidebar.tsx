@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, BookOpen, Users, UserSquare2, 
-  GraduationCap, Calendar, FileText, CheckSquare, 
+  FileText, CheckSquare, 
   Trophy, UsersRound, Clock, LineChart, 
-  Megaphone, PieChart, Settings, X, ChevronRight
+  Megaphone, PieChart, Settings, X, ChevronRight, Award
 } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -12,20 +12,22 @@ const navItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard, exact: true },
   { label: 'Programs', path: '/admin/programs', icon: BookOpen },
   { label: 'Cohorts', path: '/admin/cohorts', icon: Users },
-  { label: 'Courses', path: '/admin/courses', icon: GraduationCap },
   { label: 'Students', path: '/admin/students', icon: UserSquare2 },
   { label: 'Instructors', path: '/admin/instructors', icon: UserSquare2 },
-  { label: 'Class Schedule', path: '/admin/schedule', icon: Calendar },
   { label: 'Assignments', path: '/admin/assignments', icon: FileText },
   { label: 'Tests', path: '/admin/tests', icon: CheckSquare },
   { label: 'Capstone Projects', path: '/admin/capstone', icon: Trophy },
   { label: 'Groups', path: '/admin/groups', icon: UsersRound },
   { label: 'Attendance', path: '/admin/attendance', icon: Clock },
   { label: 'Grades', path: '/admin/grades', icon: LineChart },
+  { label: 'Certificates', path: '/admin/certificates', icon: Award },
   { label: 'Announcements', path: '/admin/announcements', icon: Megaphone },
   { label: 'Reports', path: '/admin/reports', icon: PieChart },
   { label: 'Settings', path: '/admin/settings', icon: Settings },
 ];
+
+
+
 
 interface SidebarProps {
   isOpen: boolean;

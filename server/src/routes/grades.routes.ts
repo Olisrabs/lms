@@ -17,20 +17,54 @@ router.use(authenticate);
 router.get(
   '/',
   authorize('admin', 'instructor'),
-  [query('cohort_id').isUUID()],
+  [query('cohort_id').optional().isUUID(), query('program_id').optional().isUUID()],
   validate,
   async (req: Request, res: Response): Promise<void> => {
-    const cohortId = req.query.cohort_id as string;
+    const cohortId = req.query.cohort_id as string | undefined;
+    const programId = req.query.program_id as string | undefined;
 
-    const data = await cache.remember(`grades:cohort:${cohortId}`, 120, async () => {
+    if (!cohortId) {
+      // If no cohort is selected/provided, return all grades or an empty array
       const { data, error } = await supabaseAdmin
+        .from('grades')
+        .select(`
+          id, assignment_avg, test_avg, attendance_pct, overall_score, grade_letter, updated_at, cohort_id, student_id,
+          users:student_id (id, full_name, email, avatar_url)
+        `)
+        .order('overall_score', { ascending: false });
+      if (error) { res.status(500).json({ error: error.message }); return; }
+      res.json(data);
+      return;
+    }
+
+    const cacheKey = `grades:cohort:${cohortId}:program:${programId || 'all'}`;
+    const data = await cache.remember(cacheKey, 120, async () => {
+      // First get student_ids from enrollments for this program (if filtered)
+      let studentIds: string[] | null = null;
+      if (programId) {
+        const { data: enrolls } = await supabaseAdmin
+          .from('enrollments')
+          .select('student_id')
+          .eq('cohort_id', cohortId)
+          .eq('program_id', programId);
+        studentIds = (enrolls || []).map(e => e.student_id);
+      }
+
+      let q = supabaseAdmin
         .from('grades')
         .select(`
           id, assignment_avg, test_avg, attendance_pct, overall_score, grade_letter, updated_at,
           users:student_id (id, full_name, email, avatar_url)
         `)
-        .eq('cohort_id', cohortId)
-        .order('overall_score', { ascending: false });
+        .eq('cohort_id', cohortId);
+
+      if (studentIds !== null) {
+        // If the student list is empty, return an empty array without hitting grades (avoiding IN (empty) syntax issues)
+        if (studentIds.length === 0) return [];
+        q = q.in('student_id', studentIds);
+      }
+
+      const { data, error } = await q.order('overall_score', { ascending: false });
       if (error) throw error;
       return data;
     });

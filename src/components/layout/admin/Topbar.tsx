@@ -1,15 +1,29 @@
 import { Menu, Search, Bell, ChevronDown, User, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ThemeToggle from '../../ThemeToggle';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface TopbarProps {
   onMenuClick: () => void;
+  cohorts: any[];
+  selectedCohortId: string | null;
+  onSelectCohort: (id: string | null) => void;
 }
 
-export default function Topbar({ onMenuClick }: TopbarProps) {
+export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelectCohort }: TopbarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    setDropdownOpen(false);
+    await signOut();
+    navigate('/staff', { replace: true });
+  };
+
+  const avatarLetter = user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U';
 
   return (
     <header className="lg:pl-64 fixed top-0 left-0 right-0 z-30 border-b border-border bg-background/95 backdrop-blur-2xl">
@@ -33,6 +47,24 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Cohort Selection Dropdown */}
+          {cohorts.length > 0 && (
+            <div className="flex items-center gap-2 mr-2">
+              <span className="hidden md:inline text-xs font-semibold text-muted-foreground uppercase tracking-wider">Cohort:</span>
+              <select
+                value={selectedCohortId || ''}
+                onChange={(e) => onSelectCohort(e.target.value || null)}
+                className="bg-secondary/40 border border-border hover:border-primary/50 text-foreground text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium cursor-pointer max-w-[150px] sm:max-w-[200px]"
+              >
+                {cohorts.map((c) => (
+                  <option key={c.id} value={c.id} className="bg-background text-foreground">
+                     {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <ThemeToggle />
 
           <Link to="/admin/announcements" className="p-2 rounded-xl glass hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground relative">
@@ -53,7 +85,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm shrink-0 group-hover:bg-primary/30 transition-colors">
-                A
+                {avatarLetter}
               </div>
               <ChevronDown size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
@@ -67,11 +99,11 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-3 w-56 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"
+                    className="absolute right-0 mt-3 w-56 border border-border rounded-2xl shadow-2xl z-50 overflow-hidden" style={{ backgroundColor: 'var(--card-opaque)' }}
                   >
                     <div className="p-4 border-b border-border bg-secondary/30">
-                      <p className="font-bold">Admin User</p>
-                      <p className="text-xs text-muted-foreground">System Admin</p>
+                      <p className="font-bold">{user?.full_name || 'Admin User'}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email || 'admin@academy.edu'}</p>
                     </div>
                     <div className="p-2 space-y-1">
                       <Link to="/admin/settings" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
@@ -82,7 +114,10 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
                       </Link>
                     </div>
                     <div className="p-2 border-t border-border">
-                      <button onClick={() => setDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-red-500/10 text-red-500 transition-colors">
+                      <button 
+                        onClick={handleLogout} 
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-red-500/10 text-red-500 transition-colors"
+                      >
                         <LogOut size={16} /> Logout
                       </button>
                     </div>

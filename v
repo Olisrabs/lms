@@ -36,7 +36,7 @@ It's also set in server/.env (line 38):
 
 env
 ADMIN_REGISTRATION_KEY=your-admin-registration-key-change-this
-Just replace your-admin-registration-key-change-this with any secret phrase/password you make up yourself — something only you know, e.g. EduLe_Admin_2026!. Unlike the JWT secrets, this one just needs to be memorable to you (but still private).
+Just replace your-admin-registration-key-change-this with any secret phrase/password you make up yourself — something only you know, e.g. MakeItSimple_Admin_2026!. Unlike the JWT secrets, this one just needs to be memorable to you (but still private).
 
 How you "apply" it: When you (or anyone) wants to create an admin account, they must include this key in the API request body. For example using a tool like Postman or Insomnia:
 
@@ -46,7 +46,7 @@ POST http://localhost:4000/api/v1/auth/signup/admin
   "name": "Admin Name",
   "email": "admin@example.com",
   "password": "strongpassword",
-  "adminKey": "EduLe_Admin_2026!"
+  "adminKey": "MakeItSimple_Admin_2026!"
 }
 If the adminKey doesn't match what's in .env, the server will reject the request. This prevents random people from signing up as admins.
 

@@ -70,5 +70,10 @@ export function ProtectedRoute({
     );
   }
 
+  // Student onboarding gate — redirect to onboarding if profile is incomplete
+  if (user.role === 'student' && user.onboardingIncomplete) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   return <>{children}</>;
 }

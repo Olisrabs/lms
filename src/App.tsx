@@ -7,7 +7,6 @@ import ProgramsPage from './pages/admin/ProgramsPage';
 import CohortsPage from './pages/admin/CohortsPage';
 import StudentsPage from './pages/admin/StudentsPage';
 import InstructorsPage from './pages/admin/InstructorsPage';
-import ClassSchedulePage from './pages/admin/ClassSchedulePage';
 import AssignmentsPage from './pages/admin/AssignmentsPage';
 import TestsPage from './pages/admin/TestsPage';
 import CapstonePage from './pages/admin/CapstonePage';
@@ -17,9 +16,11 @@ import GradesPage from './pages/admin/GradesPage';
 import AnnouncementsPage from './pages/admin/AnnouncementsPage';
 import ReportsPage from './pages/admin/ReportsPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import AdminCertificatesPage from './pages/admin/CertificatesPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import LandingPage from './pages/LandingPage';
+import BootcampPage from './pages/BootcampPage';
 import StaffSignInPage from './pages/staff/StaffSignInPage';
 import InstructorSignUpPage from './pages/staff/InstructorSignUpPage';
 import AdminSignUpPage from './pages/staff/AdminSignUpPage';
@@ -27,8 +28,6 @@ import AdminSignUpPage from './pages/staff/AdminSignUpPage';
 // Instructor Imports
 import InstructorLayout from './components/layout/instructor/InstructorLayout';
 import InstructorDashboardOverview from './pages/instructor/InstructorDashboardOverview';
-import InstructorCoursesPage from './pages/instructor/InstructorCoursesPage';
-import InstructorModulesPage from './pages/instructor/InstructorModulesPage';
 import InstructorMaterialsPage from './pages/instructor/InstructorMaterialsPage';
 import InstructorTimetablePage from './pages/instructor/InstructorTimetablePage';
 import InstructorAttendancePage from './pages/instructor/InstructorAttendancePage';
@@ -41,12 +40,13 @@ import InstructorPerformancePage from './pages/instructor/InstructorPerformanceP
 import InstructorAnnouncementsPage from './pages/instructor/InstructorAnnouncementsPage';
 import InstructorProfilePage from './pages/instructor/InstructorProfilePage';
 import InstructorSettingsPage from './pages/instructor/InstructorSettingsPage';
+import InstructorSchedulePage from './pages/instructor/InstructorSchedulePage';
 import InstructorOnboardingPage from './pages/instructor/InstructorOnboardingPage';
 
 // Student Imports
 import StudentLayout from './components/layout/student/StudentLayout';
 import StudentDashboardOverview from './pages/student/StudentDashboardOverview';
-import StudentCoursesPage from './pages/student/StudentCoursesPage';
+import StudentClassesPage from './pages/student/StudentClassesPage';
 import StudentCourseDetailsPage from './pages/student/StudentCourseDetailsPage';
 import StudentLessonPage from './pages/student/StudentLessonPage';
 import StudentTimetablePage from './pages/student/StudentTimetablePage';
@@ -60,6 +60,7 @@ import StudentProfilePage from './pages/student/StudentProfilePage';
 import StudentSettingsPage from './pages/student/StudentSettingsPage';
 import StudentAnnouncementsPage from './pages/student/StudentAnnouncementsPage';
 import StudentOnboardingPage from './pages/student/StudentOnboardingPage';
+import StudentAttendancePage from './pages/student/StudentAttendancePage';
 
 function App() {
   return (
@@ -78,8 +79,9 @@ function App() {
         <Route path="/onboarding" element={<StudentOnboardingPage />} />
         <Route path="/instructor/onboarding" element={<InstructorOnboardingPage />} />
 
-        {/* Landing Page Route */}
+        {/* Landing Page Routes */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/bootcamp" element={<BootcampPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={
@@ -93,7 +95,6 @@ function App() {
           <Route path="courses" element={<ProgramsPage />} />
           <Route path="students" element={<StudentsPage />} />
           <Route path="instructors" element={<InstructorsPage />} />
-          <Route path="schedule" element={<ClassSchedulePage />} />
           <Route path="assignments" element={<AssignmentsPage />} />
           <Route path="tests" element={<TestsPage />} />
           <Route path="capstone" element={<CapstonePage />} />
@@ -103,19 +104,22 @@ function App() {
           <Route path="announcements" element={<AnnouncementsPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="certificates" element={<AdminCertificatesPage />} />
         </Route>
 
         {/* Student Routes */}
         <Route path="/student" element={
-          <ProtectedRoute allowedRoles={['student']}>
+          <ProtectedRoute allowedRoles={['student']} redirectTo="/signin">
             <StudentLayout />
           </ProtectedRoute>
         }>
           <Route index element={<StudentDashboardOverview />} />
-          <Route path="courses" element={<StudentCoursesPage />} />
+          <Route path="classes" element={<StudentClassesPage />} />
+          <Route path="courses" element={<StudentClassesPage />} />
           <Route path="courses/:id" element={<StudentCourseDetailsPage />} />
           <Route path="courses/:id/lesson/:lessonId" element={<StudentLessonPage />} />
           <Route path="timetable" element={<StudentTimetablePage />} />
+          <Route path="attendance" element={<StudentAttendancePage />} />
           <Route path="assignments" element={<StudentAssignmentsPage />} />
           <Route path="tests" element={<StudentTestsPage />} />
           <Route path="tests/:id" element={<StudentTestTakingPage />} />
@@ -134,8 +138,7 @@ function App() {
           </ProtectedRoute>
         }>
           <Route index element={<InstructorDashboardOverview />} />
-          <Route path="courses" element={<InstructorCoursesPage />} />
-          <Route path="modules" element={<InstructorModulesPage />} />
+          <Route path="modules" element={<Navigate to="/instructor" replace />} />
           <Route path="materials" element={<InstructorMaterialsPage />} />
           <Route path="timetable" element={<InstructorTimetablePage />} />
           <Route path="attendance" element={<InstructorAttendancePage />} />
@@ -145,6 +148,7 @@ function App() {
           <Route path="capstone" element={<InstructorCapstonePage />} />
           <Route path="grades" element={<InstructorGradesPage />} />
           <Route path="performance" element={<InstructorPerformancePage />} />
+          <Route path="schedule" element={<InstructorSchedulePage />} />
           <Route path="announcements" element={<InstructorAnnouncementsPage />} />
           <Route path="profile" element={<InstructorProfilePage />} />
           <Route path="settings" element={<InstructorSettingsPage />} />

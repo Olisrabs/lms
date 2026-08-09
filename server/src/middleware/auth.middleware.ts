@@ -25,6 +25,8 @@ export async function authenticate(
     }
 
     const token = header.split(' ')[1];
+
+
     let payload: JwtPayload;
 
     try {

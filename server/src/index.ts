@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
@@ -21,6 +22,7 @@ import groupsRoutes        from './routes/groups.routes';
 import capstonesRoutes     from './routes/capstones.routes';
 import announcementsRoutes from './routes/announcements.routes';
 import notificationsRoutes from './routes/notifications.routes';
+import certificatesRoutes  from './routes/certificates.routes';
 
 // ─── Middleware imports ───────────────────────────────────────────────────────
 import { errorHandler, notFound } from './middleware/validation.middleware';
@@ -34,8 +36,8 @@ app.use(helmet({
 }));
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
-app.use(cors({
-  origin: (origin, callback) => {
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     const allowed = [config.clientUrl, 'http://localhost:5173', 'http://localhost:4000'];
     if (!origin || allowed.includes(origin)) {
       callback(null, true);
@@ -46,7 +48,13 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+
+app.use(cors(corsOptions));
+
+// Handle OPTIONS preflight immediately — must be BEFORE rate limiters
+// so CORS preflight never gets blocked or counted against rate limits.
+app.options('*', cors(corsOptions));
 
 // ─── Compression: gzip all responses > 1KB ────────────────────────────────────
 app.use(compression({ threshold: 1024 }));
@@ -67,6 +75,7 @@ const globalLimiter = rateLimit({
   max: config.rateLimit.max,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.method === 'OPTIONS', // Never rate-limit CORS preflight
   message: { error: 'Too many requests, please try again later.' },
 });
 
@@ -75,6 +84,7 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,  // 15 minutes
   max: 20,                     // 20 auth attempts per window
   skipSuccessfulRequests: true,
+  skip: (req) => req.method === 'OPTIONS', // Never rate-limit CORS preflight
   message: { error: 'Too many authentication attempts.' },
 });
 
@@ -104,6 +114,7 @@ app.use('/api/v1/groups',        groupsRoutes);
 app.use('/api/v1/capstones',     capstonesRoutes);
 app.use('/api/v1/announcements', announcementsRoutes);
 app.use('/api/v1/notifications', notificationsRoutes);
+app.use('/api/v1/certificates',  certificatesRoutes);
 
 // ─── 404 & Error Handlers ─────────────────────────────────────────────────────
 app.use(notFound);
@@ -112,7 +123,7 @@ app.use(errorHandler);
 // ─── Start server ─────────────────────────────────────────────────────────────
 const PORT = config.port;
 app.listen(PORT, () => {
-  logger.info(`🚀 EduLe API running on port ${PORT} [${config.env}]`);
+  logger.info(`🚀 Make It Simple API running on port ${PORT} [${config.env}]`);
 });
 
 export default app;

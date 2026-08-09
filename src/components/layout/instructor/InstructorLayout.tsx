@@ -1,14 +1,24 @@
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Menu, Search, Bell, ChevronDown, User, Settings, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import InstructorSidebar from './InstructorSidebar';
 import ThemeToggle from '../../ThemeToggle';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export default function InstructorLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+  const initials = user?.full_name ? user.full_name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() : 'IN';
+
+  const handleLogout = async () => {
+    setDropdownOpen(false);
+    await signOut();
+    navigate('/staff', { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-background flex text-foreground selection:bg-primary/30">
@@ -29,7 +39,7 @@ export default function InstructorLayout() {
               <Search className="absolute left-3 text-muted-foreground" size={18} />
               <input 
                 type="text" 
-                placeholder="Global Search... (Press Cmd+K)" 
+                placeholder="Global Search..." 
                 className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
               />
             </div>
@@ -51,12 +61,12 @@ export default function InstructorLayout() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xs ring-2 ring-transparent group-hover:ring-primary/30 transition-all">
-                  DR
-                </div>
-                <div className="hidden md:block">
-                  <p className="text-sm font-bold leading-tight group-hover:text-primary transition-colors">Dr. Robert</p>
-                  <p className="text-xs text-muted-foreground">Instructor</p>
-                </div>
+                    {initials}
+                  </div>
+                  <div className="hidden md:block">
+                    <p className="text-sm font-bold leading-tight group-hover:text-primary transition-colors">{user?.full_name || 'Instructor'}</p>
+                    <p className="text-xs text-muted-foreground">Instructor</p>
+                  </div>
                 <ChevronDown size={14} className="text-muted-foreground hidden sm:block group-hover:text-primary transition-colors" />
               </div>
 
@@ -72,8 +82,8 @@ export default function InstructorLayout() {
                       className="absolute right-0 mt-3 w-56 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden"
                     >
                       <div className="p-4 border-b border-border bg-secondary/30">
-                        <p className="font-bold">Dr. Robert</p>
-                        <p className="text-xs text-muted-foreground">robert@academy.edu</p>
+                        <p className="font-bold">{user?.full_name || 'Instructor'}</p>
+                        <p className="text-xs text-muted-foreground">{user?.email || ''}</p>
                       </div>
                       <div className="p-2 space-y-1">
                         <Link to="/instructor/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
@@ -84,7 +94,10 @@ export default function InstructorLayout() {
                         </Link>
                       </div>
                       <div className="p-2 border-t border-border">
-                        <button onClick={() => setDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-red-500/10 text-red-500 transition-colors">
+                        <button 
+                          onClick={handleLogout} 
+                          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium hover:bg-red-500/10 text-red-500 transition-colors"
+                        >
                           <LogOut size={16} /> Logout
                         </button>
                       </div>
