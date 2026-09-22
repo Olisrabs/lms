@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Clock, Users, Star, ArrowRight, CheckCircle2, Sparkles, Award } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -37,7 +38,7 @@ export default function HomePage() {
                 <div className="elementor-widget-container">
                   <div className="ekit-wid-con">
                     <div className="video-content">
-                      <a className="ekit_icon_button glow-ripple ekit-video-popup ekit-video-popup-btn" href="https://www.youtube.com/embed/VhBl3dHT5SY" target="_blank" rel="noreferrer" aria-label="video-popup">
+                      <a className="ekit_icon_button glow-ripple ekit-video-popup ekit-video-popup-btn" href="#" target="_blank" rel="noreferrer" aria-label="video-popup">
                         <i aria-hidden="true" className="icon icon-play1"></i>
                       </a>
                     </div>
@@ -239,102 +240,331 @@ export default function HomePage() {
             <p>Explore carefully curated programs designed to build essential skills, empower your career, and inspire personal growth in every learner.</p>
           </div>
 
-          <div className="elementor-element elementor-element-bea175c e-con-full e-flex e-con e-child" data-id="bea175c" data-element_type="container">
-            
-            {/* Course 1 */}
-            <div className="elementor-element elementor-element-2396a1b e-con-full e-flex e-con e-child" data-id="2396a1b" data-element_type="container">
-              <div className="elementor-element elementor-element-91fa238 e-con-full e-flex e-con e-child">
-                <div className="elementor-element elementor-element-16d8396 elementor-widget elementor-widget-icon-list">
-                  <ul className="elementor-icon-list-items elementor-inline-items">
-                    <li className="elementor-icon-list-item elementor-inline-item">
-                      <span className="elementor-icon-list-icon"><i className="icon icon-clock"></i></span>
-                      <span className="elementor-icon-list-text">1 Week (Plus one month mentorship)</span>
-                    </li>
-                    <li className="elementor-icon-list-item elementor-inline-item">
-                      <span className="elementor-icon-list-icon"><i className="icon icon-user"></i></span>
-                      <span className="elementor-icon-list-text">12,450+ Enrolled</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="elementor-element elementor-element-4cebca3 e-con-full e-flex e-con e-child">
-                  <div className="elementor-element elementor-element-4551ad9 elementor-widget elementor-widget-heading">
-                    <h4 className="elementor-heading-title elementor-size-default">
-                      <Link to="/signup">Master Digital Marketing Success</Link>
-                    </h4>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+            maxWidth: '860px',
+            margin: '28px auto 0',
+            width: '100%'
+          }}>
+            {[
+              {
+                id: 'course-1',
+                title: 'Design Principles & Visual Communication',
+                category: 'Learning & Designing',
+                badge: 'Bestseller',
+                badgeType: 'bestseller',
+                duration: '1 Week (+ 1 Mo. Mentorship)',
+                students: '10+ Enrolled',
+                rating: 4.8,
+                reviews: '50+',
+                coverImg: '/assets/images/Coba-2.jpg',
+                level: 'Beginner to Advanced',
+                instructor: {
+                  name: 'Adejoye Timothy',
+                  role: 'Lead Tutor / Founder',
+                  avatar: '/assets/images/Coba-2a.jpg'
+                },
+                highlights: [
+                  'Smartphone Graphic Desig',
+                  'Canva for Beginners',
+                  'PixelLab for Beginners',
+                  'Social Media Design'
+                ]
+              },
+              {
+                id: 'course-2',
+                title: 'Building Your Brand as a Creative/Designer',
+                category: 'Brand & Marketing',
+                badge: 'Top Rated',
+                badgeType: 'top-rated',
+                duration: '1 Week (+ 1 Mo. Mentorship)',
+                students: '5+ Enrolled',
+                rating: 4.9,
+                reviews: '10+',
+                coverImg: '/assets/images/Coba-3.jpg',
+                level: 'All Levels Welcome',
+                instructor: {
+                  name: 'Adejoye Timothy',
+                  role: 'Lead Tutor / Founder',
+                  avatar: '/assets/images/Coba-3a.jpg'
+                },
+                highlights: [
+                  'Introduction to AI for Creatives',
+                  'Marketing Yourself and Getting Clients'
+                ]
+              }
+            ].map((course) => (
+              <div
+                key={course.id}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '18px',
+                  overflow: 'hidden',
+                  border: '1px solid #E5E7EB',
+                  boxShadow: '0 8px 24px -4px rgba(0, 71, 214, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  position: 'relative'
+                }}
+                className="group hover:-translate-y-1.5 hover:shadow-[0_18px_36px_-8px_rgba(0,71,214,0.15)]"
+              >
+                {/* Media Banner */}
+                <div style={{ position: 'relative', height: '170px', overflow: 'hidden', backgroundColor: '#F1F5F9' }}>
+                  <img
+                    src={course.coverImg}
+                    alt={course.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                    className="group-hover:scale-105"
+                  />
+                  {/* Subtle Gradient Overlay */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, transparent 40%, rgba(15, 23, 42, 0.72) 100%)',
+                      pointerEvents: 'none'
+                    }}
+                  />
+
+                  {/* Header Floating Badges */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    right: '12px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    pointerEvents: 'none'
+                  }}>
+                    <span style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(8px)',
+                      color: '#0F172A',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+                    }}>
+                      {course.category}
+                    </span>
+                    <span style={{
+                      backgroundColor: course.badgeType === 'bestseller' ? '#EA580C' : '#0047D6',
+                      color: '#FFFFFF',
+                      fontSize: '10px',
+                      fontWeight: 800,
+                      padding: '4px 9px',
+                      borderRadius: '999px',
+                      boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      letterSpacing: '0.03em',
+                      textTransform: 'uppercase'
+                    }}>
+                      {course.badgeType === 'bestseller' ? <Sparkles size={11} /> : <Award size={11} />}
+                      {course.badge}
+                    </span>
                   </div>
-                  <div className="elementor-element elementor-element-c23fe4f elementor-widget elementor-widget-heading">
-                    <h5 className="elementor-heading-title elementor-size-default">★ 4.8 (1,240 Reviews)</h5>
+
+                  {/* Bottom Pill: Course Level */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '12px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                    backdropFilter: 'blur(8px)',
+                    color: '#F8FAFC',
+                    fontSize: '10.5px',
+                    fontWeight: 600,
+                    padding: '3px 9px',
+                    borderRadius: '999px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)'
+                  }}>
+                    <span>{course.level}</span>
                   </div>
                 </div>
-                <div className="elementor-element elementor-element-b7d081d elementor-widget elementor-widget-image-box">
-                  <div className="elementor-image-box-wrapper">
-                    <figure className="elementor-image-box-img">
-                      <img width="600" height="600" src="/assets/images/Coba-2a.jpg" alt="James Whitmore" />
-                    </figure>
-                    <div className="elementor-image-box-content">
-                      <p className="elementor-image-box-title">By</p>
-                      <p className="elementor-image-box-description">James Whitmore, MBA</p>
+
+                {/* Card Content Area */}
+                <div style={{
+                  padding: '16px 18px 18px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    {/* Duration & Enrolled Meta row */}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      alignItems: 'center',
+                      gap: '6px',
+                      marginBottom: '10px'
+                    }}>
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        color: '#475569',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        padding: '3px 9px',
+                        borderRadius: '999px'
+                      }}>
+                        <Clock size={12} color="#0047D6" />
+                        <span>{course.duration}</span>
+                      </div>
+
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        color: '#475569',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        padding: '3px 9px',
+                        borderRadius: '999px'
+                      }}>
+                        <Users size={12} color="#0047D6" />
+                        <span>{course.students}</span>
+                      </div>
+                    </div>
+
+                    {/* Course Title */}
+                    <h3 style={{
+                      fontSize: '17px',
+                      fontWeight: 800,
+                      lineHeight: '1.3',
+                      marginBottom: '8px',
+                      color: '#0F172A'
+                    }}>
+                      <Link
+                        to="/signup"
+                        style={{ color: 'inherit', textDecoration: 'none', transition: 'color 0.2s ease' }}
+                        className="hover:text-[#0047D6]"
+                      >
+                        {course.title}
+                      </Link>
+                    </h3>
+
+                    {/* Star Rating & Reviews */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      marginBottom: '12px'
+                    }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={13} fill="#F59E0B" color="#F59E0B" />
+                        ))}
+                      </div>
+                      <span style={{ fontWeight: 800, fontSize: '12.5px', color: '#0F172A' }}>
+                        {course.rating}
+                      </span>
+                      <span style={{ fontSize: '11.5px', color: '#64748B' }}>
+                        ({course.reviews} reviews)
+                      </span>
+                    </div>
+
+                    {/* Key Highlights */}
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                      marginBottom: '14px',
+                      padding: '10px 12px',
+                      backgroundColor: '#F8FAFC',
+                      borderRadius: '12px',
+                      border: '1px solid #EDF2F7'
+                    }}>
+                      {course.highlights.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '12px', color: '#334155' }}>
+                          <CheckCircle2 size={13} color="#0047D6" style={{ flexShrink: 0 }} />
+                          <span>{item}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-                <div className="elementor-element elementor-element-750df59 elementor-widget elementor-widget-button">
-                  <Link className="elementor-button elementor-button-link elementor-size-sm elementor-animation-shrink" to="/signup">
-                    <span className="elementor-button-content-wrapper">
-                      <span className="elementor-button-icon"><i className="icon icon-right-arrow"></i></span>
-                      <span className="elementor-button-text">Enroll And Begin</span>
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            </div>
 
-            {/* Course 2 */}
-            <div className="elementor-element elementor-element-5d3df34 e-con-full e-flex e-con e-child" data-id="5d3df34" data-element_type="container">
-              <div className="elementor-element elementor-element-35dfbcc e-con-full e-flex e-con e-child">
-                <div className="elementor-element elementor-element-e8bd6e5 elementor-widget elementor-widget-icon-list">
-                  <ul className="elementor-icon-list-items elementor-inline-items">
-                    <li className="elementor-icon-list-item elementor-inline-item">
-                      <span className="elementor-icon-list-icon"><i className="icon icon-clock"></i></span>
-                      <span className="elementor-icon-list-text">1 Week (Plus one month mentorship)</span>
-                    </li>
-                    <li className="elementor-icon-list-item elementor-inline-item">
-                      <span className="elementor-icon-list-icon"><i className="icon icon-user"></i></span>
-                      <span className="elementor-icon-list-text">9,870 Enrolled</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="elementor-element elementor-element-366d1d4 e-con-full e-flex e-con e-child">
-                  <div className="elementor-element elementor-element-456fa1b elementor-widget elementor-widget-heading">
-                    <h4 className="elementor-heading-title elementor-size-default">
-                      <Link to="/signup">Build Websites Like A Pro</Link>
-                    </h4>
-                  </div>
-                  <div className="elementor-element elementor-element-b9f0b27 elementor-widget elementor-widget-heading">
-                    <h5 className="elementor-heading-title elementor-size-default">★ 4.9 (980 Reviews)</h5>
-                  </div>
-                </div>
-                <div className="elementor-element elementor-element-12c20ef elementor-widget elementor-widget-image-box">
-                  <div className="elementor-image-box-wrapper">
-                    <figure className="elementor-image-box-img">
-                      <img width="600" height="600" src="/assets/images/Coba-3a.jpg" alt="Lisa Chen" />
-                    </figure>
-                    <div className="elementor-image-box-content">
-                      <p className="elementor-image-box-title">By</p>
-                      <p className="elementor-image-box-description">Lisa Chen, M.Sc.</p>
+                  {/* Bottom: Instructor + Action Button */}
+                  <div style={{
+                    borderTop: '1px solid #F1F5F9',
+                    paddingTop: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '10px',
+                    marginTop: 'auto'
+                  }}>
+                    {/* Instructor Info */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                      <img
+                        src={course.instructor.avatar}
+                        alt={course.instructor.name}
+                        style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '999px',
+                          objectFit: 'cover',
+                          border: '2px solid #DBEAFE',
+                          boxShadow: '0 1px 4px rgba(0,0,0,0.05)'
+                        }}
+                      />
+                      <div>
+                        <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.04em', color: '#64748B', fontWeight: 600 }}>
+                          Instructor
+                        </div>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
+                          {course.instructor.name}
+                        </div>
+                      </div>
                     </div>
+
+                    {/* CTA Button */}
+                    <Link
+                      to="/signup"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        backgroundColor: '#0047D6',
+                        color: '#FFFFFF',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        padding: '8px 15px',
+                        borderRadius: '999px',
+                        textDecoration: 'none',
+                        boxShadow: '0 3px 10px rgba(0, 71, 214, 0.22)',
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0
+                      }}
+                      className="hover:bg-[#0038A8] hover:shadow-md hover:shadow-blue-500/30 active:scale-95"
+                    >
+                      <span>Enroll & Begin</span>
+                      <ArrowRight size={12} />
+                    </Link>
                   </div>
                 </div>
-                <div className="elementor-element elementor-element-918792d elementor-widget elementor-widget-button">
-                  <Link className="elementor-button elementor-button-link elementor-size-sm elementor-animation-shrink" to="/signup">
-                    <span className="elementor-button-content-wrapper">
-                      <span className="elementor-button-icon"><i className="icon icon-right-arrow"></i></span>
-                      <span className="elementor-button-text">Enroll And Begin</span>
-                    </span>
-                  </Link>
-                </div>
               </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </div>
@@ -393,10 +623,10 @@ export default function HomePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '30px', marginTop: '40px' }}>
             {[
-              { name: "James Whitmore, MBA", role: "Business & Marketing Educator", img: "/assets/images/Coba-2a.jpg" },
-              { name: "Lisa Chen, M.Sc.", role: "Creative Arts & Design Educator", img: "/assets/images/Coba-3a.jpg" },
-              { name: "Oliver Bennett, M.A.", role: "Master of Language Educator", img: "/assets/images/Coba-1a.jpg" },
-              { name: "Sophia Martínez", role: "Psychology & Personal Coach", img: "/assets/images/Coba-4a.jpg" }
+              { name: "Adejoye Timothy", role: "Lead Tutor / Founder", img: "/assets/images/Coba-2a.jpg" },
+              { name: "Teni", role: "Design Educator", img: "/assets/images/Coba-3a.jpg" },
+              { name: "Freeman", role: "Design Educator", img: "/assets/images/Coba-1a.jpg" },
+              { name: "Olugola Precious", role: "Design Educator", img: "/assets/images/Coba-4a.jpg" }
             ].map((inst, idx) => (
               <div key={idx} className="elementor-element e-con-full e-flex e-con e-child" style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', textAlign: 'center' }}>
                 <img src={inst.img} alt={inst.name} style={{ width: '100%', height: '260px', objectFit: 'cover' }} />

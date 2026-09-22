@@ -208,7 +208,7 @@ export default function SignInPage() {
               </label>
               <input 
                 type="email" 
-                placeholder="student@academy.edu" 
+                placeholder="student@makeitsimple.edu" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 

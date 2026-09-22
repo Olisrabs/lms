@@ -229,7 +229,7 @@ export default function SignUpPage() {
                   </label>
                   <input 
                     type="text" 
-                    placeholder="John" 
+                    placeholder="Olajide" 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required 
@@ -261,7 +261,7 @@ export default function SignUpPage() {
                   </label>
                   <input 
                     type="text" 
-                    placeholder="Doe" 
+                    placeholder="Abimbola" 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required 
@@ -295,7 +295,7 @@ export default function SignUpPage() {
                 </label>
                 <input 
                   type="email" 
-                  placeholder="john.doe@academy.edu" 
+                  placeholder="israel@makeitsimple.edu" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 

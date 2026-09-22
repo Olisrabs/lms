@@ -51,7 +51,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h6 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: '700', color: '#1A1A2E' }}>Office</h6>
-                    <span style={{ fontSize: '14px', color: '#666' }}>456 Creative District Ahmad Yani, Medan</span>
+                    <span style={{ fontSize: '14px', color: '#666' }}>Address</span>
                   </div>
                 </div>
 
@@ -61,7 +61,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h6 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: '700', color: '#1A1A2E' }}>Email</h6>
-                    <span style={{ fontSize: '14px', color: '#666' }}>hola@makeitsimple.com</span>
+                    <span style={{ fontSize: '14px', color: '#666' }}>adejoyetimothy59@gmail.com</span>
                   </div>
                 </div>
 
@@ -71,7 +71,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h6 style={{ margin: '0 0 4px', fontSize: '16px', fontWeight: '700', color: '#1A1A2E' }}>Phone</h6>
-                    <span style={{ fontSize: '14px', color: '#666' }}>+800-3374-4676</span>
+                    <span style={{ fontSize: '14px', color: '#666' }}>+234 816 538 5153</span>
                   </div>
                 </div>
               </div>

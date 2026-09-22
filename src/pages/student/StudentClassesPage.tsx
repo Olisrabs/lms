@@ -130,7 +130,7 @@ export default function StudentClassesPage() {
         <div className="flex items-center gap-2 p-1 bg-secondary/40 rounded-2xl border border-border overflow-x-auto">
           {[
             { id: 'all', label: `All (${classes.length})` },
-            { id: 'live', label: `🔴 Live Now (${liveCount})` },
+            { id: 'live', label: `Live Now (${liveCount})` },
             { id: 'upcoming', label: `Upcoming (${upcomingCount})` },
             { id: 'past', label: `Past (${pastCount})` },
           ].map((tab) => (
