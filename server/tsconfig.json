@@ -12,19 +12,7 @@
     "resolveJsonModule": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
-    "typeRoots": ["./node_modules/@types"],
-    "types": [
-      "node",
-      "express",
-      "bcryptjs",
-      "multer",
-      "cors",
-      "compression",
-      "morgan",
-      "jsonwebtoken",
-      "uuid"
-    ]
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
