@@ -25,7 +25,7 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
     : 'ST';
 
   return (
-    <header className="h-16 fixed top-0 right-0 left-0 lg:left-64 bg-background/60 backdrop-blur-xl border-b border-border z-30 flex items-center justify-between px-4 sm:px-6">
+    <header className="h-16 fixed top-0 right-0 left-0 lg:left-64 bg-card/85 backdrop-blur-xl border-b border-border/50 z-30 flex items-center justify-between px-4 sm:px-6 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
       <div className="flex items-center gap-4 flex-1">
         <button 
           onClick={onMenuClick}
@@ -35,11 +35,11 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
         </button>
         
         <div className="max-w-md w-full hidden sm:block relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
           <input 
             type="text" 
             placeholder="Search courses, resources, or peers..." 
-            className="w-full bg-secondary/50 border border-border rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full bg-secondary/50 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all text-foreground placeholder:text-muted-foreground"
           />
         </div>
       </div>
@@ -48,10 +48,10 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
 
         <Link 
           to="/student/announcements"
-          className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors block"
+          className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-secondary/70 rounded-full transition-colors block"
         >
           <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-background"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-background"></span>
         </Link>
         
         <ThemeToggle />
@@ -59,12 +59,12 @@ export default function StudentTopbar({ onMenuClick }: TopbarProps) {
         <div className="relative">
           <button 
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-secondary transition-colors"
+            className="flex items-center gap-2 p-1 pr-2.5 rounded-full hover:bg-secondary/70 transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent border-2 border-background shadow-md flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-bold overflow-hidden">
               {initials}
             </div>
-            <ChevronDown size={16} className="text-muted-foreground" />
+            <ChevronDown size={14} className="text-muted-foreground" />
           </button>
 
           <AnimatePresence>

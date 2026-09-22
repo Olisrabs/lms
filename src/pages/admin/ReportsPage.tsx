@@ -74,6 +74,40 @@ export default function ReportsPage() {
     fetchReportData();
   }, [selectedCohortId, cohorts]);
 
+  const exportPDF = () => {
+    window.print();
+  };
+
+  const exportReport = (format: 'csv' | 'excel') => {
+    const cohortName = activeCohort?.name || 'All Cohorts';
+    const rows = [
+      ['Make It Simple Academy - Performance Analytics Report'],
+      ['Generated Date', new Date().toLocaleDateString()],
+      ['Target Cohort', `"${cohortName}"`],
+      [''],
+      ['Metric', 'Value'],
+      ['Total Enrolled Students', stats.studentsCount],
+      ['Assigned Instructors', stats.instructorsCount],
+      ['Graduation Eligibility Rate', `${stats.gradRate}%`],
+      ['Class Average Score', `${stats.classAverage}%`],
+      [''],
+      ['Cohort Growth Breakdown'],
+      ['Cohort Name', 'Total Students'],
+      ...growthData.map(g => [`"${g.name}"`, g.students])
+    ];
+
+    const content = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([content], { type: format === 'excel' ? 'application/vnd.ms-excel;charset=utf-8;' : 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cohort_report_${cohortName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}.${format === 'excel' ? 'xls' : 'csv'}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -84,13 +118,25 @@ export default function ReportsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="px-4 py-2 bg-secondary/50 border border-border rounded-xl text-sm font-semibold hover:bg-secondary transition-all flex items-center gap-2">
+          <button 
+            onClick={exportPDF}
+            className="px-4 py-2 bg-secondary/50 border border-border rounded-xl text-sm font-semibold hover:bg-secondary transition-all flex items-center gap-2 cursor-pointer"
+            title="Print or Save as PDF"
+          >
             <FileText size={16} className="text-red-500" /> PDF
           </button>
-          <button className="px-4 py-2 bg-secondary/50 border border-border rounded-xl text-sm font-semibold hover:bg-secondary transition-all flex items-center gap-2">
+          <button 
+            onClick={() => exportReport('excel')}
+            className="px-4 py-2 bg-secondary/50 border border-border rounded-xl text-sm font-semibold hover:bg-secondary transition-all flex items-center gap-2 cursor-pointer"
+            title="Download Excel spreadsheet"
+          >
             <FileSpreadsheet size={16} className="text-accent" /> Excel
           </button>
-          <button className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+          <button 
+            onClick={() => exportReport('csv')}
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer"
+            title="Download CSV report"
+          >
             <Download size={16} /> CSV
           </button>
         </div>
@@ -138,7 +184,7 @@ export default function ReportsPage() {
                       contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '12px', border: '1px solid var(--border)' }}
                       itemStyle={{ color: 'var(--foreground)' }}
                     />
-                    <Line type="monotone" dataKey="students" stroke="#534ab7" strokeWidth={3} dot={{ r: 4, fill: '#534ab7', strokeWidth: 0 }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="students" stroke="#0047D6" strokeWidth={3} dot={{ r: 4, fill: '#0047D6', strokeWidth: 0 }} activeDot={{ r: 6 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

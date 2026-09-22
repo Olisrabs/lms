@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Users, FileText, Trophy, Clock, Calendar,
-  CheckCircle2, AlertCircle, RefreshCw, BookOpen, GraduationCap, Layers
+  CheckCircle2, AlertCircle, RefreshCw, BookOpen, GraduationCap, Layers,
+  ClipboardCheck
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usersApi, scheduleApi, capstonesApi, assignmentsApi, attendanceApi, programsApi } from '../../lib/api';
@@ -183,26 +184,85 @@ export default function InstructorDashboardOverview() {
     { label: 'Submissions', value: stats.submittedAssignments, icon: FileText, color: 'text-blue-500', bg: 'bg-blue-500/10' },
   ];
 
+  const activeAssignment = assignedPrograms.find((a: any) => a.cohorts?.status === 'active') || assignedPrograms[0];
+  const activeProgramName = activeAssignment?.programs?.name;
+  const activeCohortName = activeAssignment?.cohorts?.name;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            Welcome back, {user?.full_name || 'Instructor'}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Live data from database · Last updated {lastRefresh.toLocaleTimeString()}
-          </p>
+      {/* Hero Welcome Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card rounded-3xl p-6 sm:p-8 border border-border relative overflow-hidden bg-gradient-to-br from-card via-card/90 to-primary/5 shadow-[0_4px_25px_rgba(0,0,0,0.03)]"
+      >
+        <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl translate-y-1/2 pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                Instructor Portal
+              </span>
+              {activeProgramName && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-secondary text-foreground border border-border/50">
+                  {activeProgramName} · {activeCohortName || 'Active Cohort'}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              Welcome back, <span className="text-primary">{user?.full_name || 'Instructor'}</span> 👋
+            </h1>
+
+            <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+              <span>Manage your curriculum, review student submissions, and launch live classes.</span>
+              <span className="text-border">•</span>
+              <span className="text-primary/90 font-medium">
+                Live sync · {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </p>
+          </div>
+
+          {/* Action Button Toolbar */}
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <Link
+              to="/instructor/attendance"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-secondary/80 hover:bg-secondary text-foreground border border-border transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <ClipboardCheck size={16} className="text-green-500" />
+              <span>Take Attendance</span>
+            </Link>
+
+            <Link
+              to="/instructor/assignments"
+              className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold bg-secondary/80 hover:bg-secondary text-foreground border border-border transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <FileText size={16} className="text-blue-500" />
+              <span>Assignments</span>
+            </Link>
+
+            <Link
+              to="/instructor/schedule"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20"
+            >
+              <Calendar size={16} />
+              <span>Schedule Class</span>
+            </Link>
+
+            <button
+              onClick={fetchAll}
+              disabled={loading}
+              title="Refresh Dashboard Data"
+              className="p-2.5 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-all text-muted-foreground hover:text-foreground disabled:opacity-50 cursor-pointer"
+            >
+              <RefreshCw size={16} className={loading ? 'animate-spin text-primary' : ''} />
+            </button>
+          </div>
         </div>
-        <button
-          onClick={fetchAll}
-          disabled={loading}
-          className="bg-secondary text-foreground px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-secondary/80 transition-all flex items-center gap-2 disabled:opacity-50 w-fit"
-        >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh
-        </button>
-      </div>
+      </motion.div>
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">

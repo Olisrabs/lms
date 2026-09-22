@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, ArrowRight, Loader2, Eye, EyeOff, AlertCircle, Clock } from 'lucide-react';
+import { ArrowRight, Loader2, Eye, EyeOff, AlertCircle, Clock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { programsApi } from '../lib/api';
@@ -18,6 +18,20 @@ export default function SignUpPage() {
 
   const { signUp } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Ensure light background matches frontend design
+    const root = document.documentElement;
+    const hadDark = root.classList.contains('dark');
+    if (hadDark) {
+      root.classList.remove('dark');
+    }
+    return () => {
+      if (hadDark) {
+        root.classList.add('dark');
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const checkCohortStatus = async () => {
@@ -72,41 +86,115 @@ export default function SignUpPage() {
     navigate('/onboarding');
   };
 
-  const inputClass = "w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all";
-
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div 
+      className="min-h-screen flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden"
+      style={{
+        backgroundColor: '#F4F5F8',
+        fontFamily: "'DM Sans', sans-serif"
+      }}
+    >
+      {/* Tiny, ultra-faded background stripe grid */}
+      <div 
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: "url('/assets/images/Grid-10.png')",
+          backgroundRepeat: 'repeat',
+          backgroundSize: '28px 28px',
+          opacity: 0.07,
+          pointerEvents: 'none',
+          zIndex: 1
+        }}
+      />
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
+      {/* Background soft ambient glows */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: '-10%',
+          right: '-10%',
+          width: '450px',
+          height: '450px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0, 71, 214, 0.06) 0%, rgba(0, 71, 214, 0) 70%)',
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+          zIndex: 2
+        }}
+      />
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: '-10%',
+          left: '-10%',
+          width: '450px',
+          height: '450px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0, 71, 214, 0.05) 0%, rgba(0, 71, 214, 0) 70%)',
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+          zIndex: 2
+        }}
+      />
+
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        className="w-full max-w-md relative"
+        style={{ zIndex: 10 }}
+      >
         <div className="text-center mb-8">
-          <div className="inline-flex bg-primary text-primary-foreground p-3 rounded-2xl mb-4 shadow-lg shadow-primary/20">
-            <BookOpen size={32} />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight">Create Account</h1>
-          <p className="text-muted-foreground mt-2">Join Make It Simple and start your learning journey.</p>
+          <Link to="/" className="inline-block mb-3 transition-transform hover:scale-105">
+            <img 
+              height="45" 
+              src="/logo.PNG" 
+              alt="Make It Simple Logo" 
+              style={{ maxHeight: '48px', width: 'auto', margin: '0 auto' }} 
+            />
+          </Link>
+          <h1 
+            style={{ 
+              fontFamily: "'Lexend Deca', sans-serif", 
+              fontSize: '30px', 
+              fontWeight: 800, 
+              color: '#1A1A2E',
+              marginBottom: '6px'
+            }}
+          >
+            Create Account
+          </h1>
+          <p style={{ color: '#6B7280', fontSize: '15px' }}>
+            Join Make It Simple and start your learning journey.
+          </p>
         </div>
         
-        <div className="glass-card p-8 rounded-3xl">
+        <div 
+          style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: '24px',
+            padding: '36px 32px',
+            boxShadow: '0 15px 35px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #E5E7EB'
+          }}
+        >
           {checkingCohort ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-3">
-              <Loader2 className="animate-spin text-primary" size={32} />
-              <p className="text-muted-foreground text-sm font-medium">Checking cohort status...</p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 0', gap: '12px' }}>
+              <Loader2 className="animate-spin" size={32} style={{ color: '#0047D6' }} />
+              <p style={{ color: '#6B7280', fontSize: '14px', fontWeight: 500, margin: 0 }}>Checking cohort status...</p>
             </div>
           ) : registrationClosed ? (
-            <div className="text-center py-6">
-              <div className="w-16 h-16 bg-orange-500/10 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div style={{ textAlign: 'center', padding: '24px 0' }}>
+              <div style={{ width: '64px', height: '64px', backgroundColor: '#EBF2FF', color: '#0047D6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <Clock size={32} />
               </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">Registration Closed</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+              <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1A1A2E', marginBottom: '8px' }}>Registration Closed</h2>
+              <p style={{ color: '#6B7280', fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
                 We are not accepting new student registrations at this time. Please check back later when registration opens for the next cohort.
               </p>
-              <div className="p-4 bg-secondary/50 rounded-xl border border-border text-sm text-muted-foreground">
+              <div style={{ padding: '16px', backgroundColor: '#F9F9FB', borderRadius: '14px', border: '1px solid #E5E7EB', fontSize: '14px', color: '#6B7280' }}>
                 Already have an account?{' '}
-                <Link to="/signin" className="text-primary font-semibold hover:underline">
+                <Link to="/signin" style={{ color: '#0047D6', fontWeight: 700, textDecoration: 'none' }}>
                   Sign In
                 </Link>
               </div>
@@ -117,76 +205,214 @@ export default function SignUpPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl px-4 py-3 text-sm"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '10px',
+                    backgroundColor: '#FEE2E2',
+                    border: '1px solid #FCA5A5',
+                    color: '#B91C1C',
+                    borderRadius: '14px',
+                    padding: '12px 16px',
+                    fontSize: '14px'
+                  }}
                 >
-                  <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                  <AlertCircle size={16} style={{ marginTop: '2px', flexShrink: 0 }} />
                   <span>{error}</span>
                 </motion.div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1.5">First Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                    First Name
+                  </label>
                   <input 
                     type="text" 
                     placeholder="John" 
-                    className={inputClass} 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required 
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #D1D5DB',
+                      borderRadius: '12px',
+                      padding: '12px 16px',
+                      fontSize: '14px',
+                      color: '#1A1A2E',
+                      outline: 'none',
+                      transition: 'all 0.2s ease',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#0047D6';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 71, 214, 0.12)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#D1D5DB';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1.5">Last Name</label>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                    Last Name
+                  </label>
                   <input 
                     type="text" 
                     placeholder="Doe" 
-                    className={inputClass} 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required 
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #D1D5DB',
+                      borderRadius: '12px',
+                      padding: '12px 16px',
+                      fontSize: '14px',
+                      color: '#1A1A2E',
+                      outline: 'none',
+                      transition: 'all 0.2s ease',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#0047D6';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 71, 214, 0.12)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#D1D5DB';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-1.5">Email Address</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  Email Address
+                </label>
                 <input 
                   type="email" 
                   placeholder="john.doe@academy.edu" 
-                  className={inputClass} 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #D1D5DB',
+                    borderRadius: '12px',
+                    padding: '12px 16px',
+                    fontSize: '14px',
+                    color: '#1A1A2E',
+                    outline: 'none',
+                    transition: 'all 0.2s ease',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#0047D6';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(0, 71, 214, 0.12)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#D1D5DB';
+                    e.target.style.boxShadow = 'none';
+                  }}
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-1.5">Password</label>
-                <div className="relative">
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  Password
+                </label>
+                <div style={{ position: 'relative' }}>
                   <input 
                     type={showPassword ? 'text' : 'password'} 
                     placeholder="Create a strong password" 
-                    className={inputClass} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required 
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid #D1D5DB',
+                      borderRadius: '12px',
+                      padding: '12px 42px 12px 16px',
+                      fontSize: '14px',
+                      color: '#1A1A2E',
+                      outline: 'none',
+                      transition: 'all 0.2s ease',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#0047D6';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(0, 71, 214, 0.12)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#D1D5DB';
+                      e.target.style.boxShadow = 'none';
+                    }}
                   />
                   <button 
                     type="button" 
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#9CA3AF',
+                      padding: '4px',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
                   >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div style={{ paddingTop: '8px' }}>
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full bg-primary text-primary-foreground font-semibold py-3 px-6 rounded-xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none"
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#0047D6',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '30px',
+                    padding: '14px 24px',
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    fontFamily: "'Lexend Deca', sans-serif",
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    opacity: loading ? 0.7 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    boxShadow: '0 8px 20px rgba(0, 71, 214, 0.25)',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#003BB3';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                      e.currentTarget.style.boxShadow = '0 12px 25px rgba(0, 71, 214, 0.35)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#0047D6';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 71, 214, 0.25)';
+                    }
+                  }}
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <>Create Account <ArrowRight size={18} /></>}
                 </button>
@@ -195,10 +421,10 @@ export default function SignUpPage() {
           )}
 
           {!checkingCohort && !registrationClosed && (
-            <div className="mt-8 pt-6 border-t border-border text-center">
-              <p className="text-sm text-muted-foreground">
+            <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid #E5E7EB', textAlign: 'center' }}>
+              <p style={{ fontSize: '14px', color: '#6B7280', margin: 0 }}>
                 Already have an account?{' '}
-                <Link to="/signin" className="text-primary font-semibold hover:underline">
+                <Link to="/signin" style={{ color: '#0047D6', fontWeight: 700, textDecoration: 'none' }}>
                   Sign In
                 </Link>
               </p>

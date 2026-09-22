@@ -11,39 +11,40 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-card: var(--card);
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Lexend Deca', 'DM Sans', sans-serif;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 }
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f1115;
-  --primary: #0047d6;
-  --primary-foreground: #ffffff;
-  --secondary: #e2e8f0;
-  --accent: #ef4444;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: rgba(0,0,0,0.1);
-  --card: rgba(255,255,255,0.9);
-  --card-opaque: #ffffff;
-  --radius: 0.75rem;
+  --background: #F4F5F8;
+  --foreground: #1A1A2E;
+  --primary: #0047D6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EBF2FF;
+  --accent: #0047D6;
+  --muted: #EEF0F5;
+  --muted-foreground: #6B7280;
+  --border: rgba(0, 0, 0, 0.05);
+  --card: #FFFFFF;
+  --card-opaque: #FFFFFF;
+  --radius: 0.875rem;
 }
 
 .dark {
-  --background: #0f1115;
-  --foreground: #f8fafc;
-  --primary: #3b82f6; /* slightly lighter blue for dark mode visibility, or just stick to #0047d6 */
-  --primary-foreground: #ffffff;
-  --secondary: #1e293b;
-  --accent: #ef4444;
-  --muted: #334155;
-  --muted-foreground: #94a3b8;
-  --border: rgba(255,255,255,0.08);
-  --card: rgba(15,17,21,0.85);
-  --card-opaque: #1e293b;
+  --background: #0F1117;
+  --foreground: #F8FAFC;
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1E2433;
+  --accent: #3B82F6;
+  --muted: #1E222D;
+  --muted-foreground: #94A3B8;
+  --border: rgba(255, 255, 255, 0.07);
+  --card: #181B24;
+  --card-opaque: #181B24;
 }
 
 body {
@@ -53,7 +54,11 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: var(--font-heading);
 }
 
 @utility glass {
@@ -65,17 +70,84 @@ body {
 
 @utility glass-card {
   background: var(--card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--border);
-  box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .dark .glass-card {
-  background: linear-gradient(145deg, rgba(30,41,59,0.4) 0%, rgba(15,17,21,0.2) 100%);
-  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 @utility text-gradient {
   color: var(--primary);
 }
+
+/* Subtle background grid texture matching login & signup */
+.dashboard-pattern-bg {
+  position: relative;
+}
+
+.dashboard-pattern-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/images/Grid-10.png');
+  background-repeat: repeat;
+  background-size: 28px 28px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark .dashboard-pattern-bg::before {
+  opacity: 0.015;
+}
+
+/* Button & interactive styling aligned with login & frontend */
+button.bg-primary, a.bg-primary, .btn-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border: none !important;
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(0, 71, 214, 0.22);
+  transition: all 0.2s ease;
+}
+
+button.bg-primary:hover, a.bg-primary:hover, .btn-primary:hover {
+  background-color: #003BB3 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px rgba(0, 71, 214, 0.32);
+  transform: translateY(-1px);
+}
+
+button.bg-primary:active, a.bg-primary:active, .btn-primary:active {
+  transform: translateY(0);
+}
+
+.dark button.bg-primary, .dark a.bg-primary, .dark .btn-primary {
+  background-color: var(--primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.dark button.bg-primary:hover, .dark a.bg-primary:hover, .dark .btn-primary:hover {
+  background-color: #1d4ed8 !important;
+}
+
+button.w-full, [type="submit"].w-full {
+  width: 100% !important;
+}
+
+/* Smooth input styling */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(0, 71, 214, 0.12) !important;
+}
+

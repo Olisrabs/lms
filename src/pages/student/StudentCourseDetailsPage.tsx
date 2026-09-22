@@ -180,7 +180,10 @@ export default function StudentCourseDetailsPage() {
             <p className="text-sm text-muted-foreground mb-4">
               Co-author of Redux and Create React App. Dedicated to making React simpler and more accessible.
             </p>
-            <button className="w-full py-2 bg-secondary text-foreground rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:bg-secondary/80 transition-colors">
+            <button 
+              onClick={() => window.location.href = 'mailto:dan.abramov@academy.edu?subject=Course Question: React Fundamentals'}
+              className="w-full py-2.5 bg-secondary text-foreground rounded-xl font-bold text-xs flex items-center justify-center gap-2 hover:bg-secondary/80 transition-colors cursor-pointer active:scale-95"
+            >
               <MessageSquare size={16} /> Contact Instructor
             </button>
           </div>
@@ -193,7 +196,17 @@ export default function StudentCourseDetailsPage() {
                 { name: 'Hooks_Deep_Dive.pptx', size: '5.1 MB' },
                 { name: 'Starter_Code.zip', size: '12 MB' },
               ].map((res, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors border border-transparent hover:border-border cursor-pointer group">
+                <div 
+                  key={i}
+                  onClick={() => {
+                    const blob = new Blob([`Make It Simple - Course Resource\nFile: ${res.name}\nSize: ${res.size}`], { type: 'text/plain' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = res.name;
+                    link.click();
+                  }}
+                  className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors border border-transparent hover:border-border cursor-pointer group"
+                >
                   <div className="flex items-center gap-3">
                     <FileText size={18} className="text-primary" />
                     <div>

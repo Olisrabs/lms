@@ -3,11 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   Play, Star, Users, BookOpen, Clock,
-  GraduationCap, Menu, X,
+  GraduationCap, Menu, X, CheckCircle2,
 } from 'lucide-react';
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    setNewsletterSubscribed(true);
+    setNewsletterEmail('');
+  };
 
   const isPromoActive = () => {
     // Promo active for 2 weeks from July 11, 2026 (until July 25, 2026)
@@ -99,7 +108,13 @@ export default function LandingPage() {
               <Link to="/signup" className="bg-[#0047d6] text-white px-9 py-4 rounded-full font-bold shadow-[0_10px_30px_rgba(0,71,214,0.3)] hover:-translate-y-1 transition-transform w-full sm:w-auto text-center">
                 Enroll Now
               </Link>
-              <button className="flex items-center gap-3 text-[#1A1A2E] font-bold hover:text-[#0047d6] transition-colors group">
+              <button
+                type="button"
+                onClick={() => {
+                  document.getElementById('benefits-section')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="flex items-center gap-3 text-[#1A1A2E] font-bold hover:text-[#0047d6] transition-colors group cursor-pointer"
+              >
                 <div className="w-12 h-12 rounded-full border-2 border-[#0047d6] flex items-center justify-center group-hover:bg-[#0047d6]/10 transition-colors">
                   <Play size={20} className="text-[#0047d6] ml-1" fill="currentColor" />
                 </div>
@@ -148,7 +163,7 @@ export default function LandingPage() {
       </section>
 
       {/* 5. Benefits Section */}
-      <section className="bg-[#F8F1F7] py-24 overflow-hidden">
+      <section id="benefits-section" className="bg-[#F8F1F7] py-24 overflow-hidden">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
           <div className="lg:w-1/2 relative">
             <div className="relative w-full max-w-[500px] aspect-square mx-auto">
@@ -357,16 +372,26 @@ export default function LandingPage() {
             <div>
               <h4 className="text-white font-bold text-lg mb-6">Newsletter</h4>
               <p className="mb-4 text-sm">Subscribe to get the latest updates and offers.</p>
-              <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="bg-white/10 border border-white/20 rounded-full px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-[#EF4444]"
-                />
-                <button className="bg-[#0047d6] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#003cb3] transition-colors">
-                  Subscribe
-                </button>
-              </form>
+              {newsletterSubscribed ? (
+                <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-full text-sm font-medium">
+                  <CheckCircle2 size={18} />
+                  <span>Thanks for subscribing!</span>
+                </div>
+              ) : (
+                <form className="flex flex-col gap-3" onSubmit={handleNewsletterSubmit}>
+                  <input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Your email address"
+                    className="bg-white/10 border border-white/20 rounded-full px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-[#EF4444]"
+                    required
+                  />
+                  <button type="submit" className="bg-[#0047d6] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:bg-[#003cb3] transition-colors">
+                    Subscribe
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 

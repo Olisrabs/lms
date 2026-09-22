@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { ArrowRight, Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -36,18 +36,23 @@ export default function InstructorSignUpPage() {
   const inputClass = "w-full bg-background border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all";
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden dashboard-pattern-bg">
       {/* Background decoration */}
       <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="inline-flex bg-primary text-primary-foreground p-3 rounded-2xl mb-4 shadow-lg shadow-primary/20">
-            <BookOpen size={32} />
-          </div>
+          <Link to="/" className="inline-block mb-3 transition-transform hover:scale-105">
+            <img 
+              src="/logo.PNG" 
+              alt="Make It Simple" 
+              className="h-11 w-auto mx-auto" 
+              style={{ maxHeight: '48px', width: 'auto', margin: '0 auto' }} 
+            />
+          </Link>
           <h1 className="text-3xl font-bold tracking-tight">Instructor Application</h1>
-          <p className="text-muted-foreground mt-2">Join as an instructor and share your knowledge.</p>
+          <p className="text-muted-foreground mt-1">Join as an instructor and share your knowledge.</p>
         </div>
         
         <div className="glass-card p-8 rounded-3xl">

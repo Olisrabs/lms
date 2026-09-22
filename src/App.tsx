@@ -19,11 +19,16 @@ import SettingsPage from './pages/admin/SettingsPage';
 import AdminCertificatesPage from './pages/admin/CertificatesPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
-import LandingPage from './pages/LandingPage';
-import BootcampPage from './pages/BootcampPage';
 import StaffSignInPage from './pages/staff/StaffSignInPage';
 import InstructorSignUpPage from './pages/staff/InstructorSignUpPage';
 import AdminSignUpPage from './pages/staff/AdminSignUpPage';
+
+// Frontend Template Imports
+import PublicLayout from './components/layout/frontend/PublicLayout';
+import HomePage from './pages/frontend/HomePage';
+import AboutUsPage from './pages/frontend/AboutUsPage';
+import TestimonialsPage from './pages/frontend/TestimonialsPage';
+import ContactPage from './pages/frontend/ContactPage';
 
 // Instructor Imports
 import InstructorLayout from './components/layout/instructor/InstructorLayout';
@@ -79,9 +84,14 @@ function App() {
         <Route path="/onboarding" element={<StudentOnboardingPage />} />
         <Route path="/instructor/onboarding" element={<InstructorOnboardingPage />} />
 
-        {/* Landing Page Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/bootcamp" element={<BootcampPage />} />
+        {/* User Frontend Routes (WordPress Template Migration) */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
 
         {/* Admin Routes */}
         <Route path="/admin" element={

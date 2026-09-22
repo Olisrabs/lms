@@ -1,0 +1,804 @@
+/* Custom Styling Overrides for Askit Educate Clone */
+
+:root {
+  --e-global-color-accent: #0047D6 !important;
+  --primary-orange: #0047D6;
+  --primary-brand: #0047D6;
+  --text-dark: #2C2B2B;
+  --bg-light: #F9F9FB;
+  --border-radius-pill: 20px;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Lexend Deca', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font-body) !important;
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6, .elementor-heading-title, .elementor-button, .btn {
+  font-family: var(--font-heading) !important;
+}
+
+/* Ensure background grid texture renders properly */
+.elementor-element[data-settings*="Grid-10"],
+.has-grid-bg {
+  background-image: url('../images/Grid-10.png') !important;
+  background-repeat: repeat !important;
+}
+
+/* Accordion Smooth Transitions */
+.e-n-accordion-item-title,
+.elementskit-card-header {
+  cursor: pointer !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.e-n-accordion-item-title[aria-expanded="true"],
+.elementskit-card-header.active {
+  color: var(--primary-orange) !important;
+}
+
+.e-n-accordion-item-content,
+.elementskit-card-body {
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.e-n-accordion-item-content[hidden],
+.elementskit-card-body.collapse:not(.show) {
+  display: none !important;
+}
+
+/* Header Sticky State */
+header.is-sticky,
+.sticky-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+/* Custom Search Modal Popup */
+.custom-search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.custom-search-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-search-box {
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+}
+
+.custom-search-box input {
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 1.2rem;
+  border-radius: 40px;
+  border: 2px solid var(--primary-orange);
+  outline: none;
+  background: #fff;
+}
+
+.custom-search-close {
+  position: absolute;
+  top: -50px;
+  right: 0;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Swiper Slider Fixes */
+.swiper-slide {
+  height: auto !important;
+}
+
+/* Stacking and Background Overlay Regressions Fix */
+/* Ensure container inner contents sit above pseudo-element background overlays */
+.e-con-inner,
+.e-con > .elementor-widget,
+.e-con > .e-con-inner,
+.e-con > .elementor-widget-container,
+.elementor-widget-container,
+.elementskit-card,
+.elementor-card {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Background overlays stay behind content */
+.e-con::before,
+.elementor-element::before {
+  z-index: 0 !important;
+}
+
+/* Text and content contrast fixes */
+.elementor-widget-heading .elementor-heading-title,
+.elementor-widget-text-editor,
+.elementor-widget-button .elementor-button {
+  position: relative;
+  z-index: 2;
+}
+
+/* FontAwesome and Icon Mappings for missing icon font classes */
+.icon.icon-right-arrow::before,
+.rtmicon-arrow-right::before {
+  content: "\f061" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-left-arrow::before {
+  content: "\f060" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-plus::before,
+.icon.icon-plus1::before {
+  content: "\f067" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-minus::before {
+  content: "\f068" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-quote2::before,
+.icon.icon-quote::before {
+  content: "\f10d" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-play1::before,
+.icon.icon-play::before,
+.icon.icon-play-button::before {
+  content: "\f04b" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-cancel::before,
+.icon.icon-cross::before {
+  content: "\f00d" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-user::before,
+.icon.icon-user1::before,
+.icon.icon-users::before {
+  content: "\f007" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-clock::before,
+.icon.icon-clock1::before,
+.icon.icon-alarm::before {
+  content: "\f017" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-bookmark::before {
+  content: "\f02e" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-star::before,
+.icon.icon-star1::before {
+  content: "\f005" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-search::before,
+.icon.icon-search1::before,
+.icon.icon-magnifier::before {
+  content: "\f002" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-envelope::before,
+.icon.icon-envelope1::before,
+.icon.icon-mail::before {
+  content: "\f0e0" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-phone::before,
+.icon.icon-phone-call::before {
+  content: "\f095" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-map-marker::before,
+.icon.icon-location::before {
+  content: "\f3c5" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-book::before,
+.icon.icon-open-book::before {
+  content: "\f02d" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.icon.icon-graduation-hat::before,
+.icon.icon-school::before {
+  content: "\f19d" !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+/* ==========================================================================
+   Frontend Navbar: Centralized & Evenly Distributed Across Width
+   ========================================================================== */
+
+.ekit-template-content-header {
+  width: 100% !important;
+}
+
+.ekit-template-content-header .elementor-element.elementor-element-a5b3a25 {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* --- Desktop Layout (min-width: 1025px) --- */
+@media (min-width: 1025px) {
+  .ekit-template-content-header .elementor-element.elementor-element-a5b3a25 > .e-con-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+    padding: 0 clamp(20px, 3.5vw, 60px) !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Flatten intermediate container so Logo, Menu, and Actions are direct flex siblings */
+  .ekit-template-content-header .elementor-element.elementor-element-85cb2d0 {
+    display: contents !important;
+  }
+
+  /* 1. Logo (Left) */
+  .ekit-template-content-header .elementor-element.elementor-element-bdf90b0 {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-bdf90b0 .elementor-widget-image {
+    width: auto !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-bdf90b0 img {
+    max-height: 48px !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+  /* 2. Navigation Menu (Center) - Centralized & Evenly Distributed */
+  .ekit-template-content-header .elementor-element.elementor-element-d2b9cce {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc .elementor-widget-container,
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc nav.ekit-wid-con {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc .elementskit-menu-container {
+    height: auto !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: transparent !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc .elementskit-navbar-nav {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 32px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc .elementskit-navbar-nav > li {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-34fcbdc .elementskit-navbar-nav > li > a {
+    padding: 10px 4px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 3. Right Actions (Social Icons + Get Started) */
+  .ekit-template-content-header .elementor-element.elementor-element-f8ab637 {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 16px !important;
+    margin: 0 !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-899e3e6 {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-674e54d {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+  }
+}
+
+/* --- Mobile / Tablet Responsive Layout (<= 1024px) --- */
+@media (max-width: 1024px) {
+  .ekit-template-content-header .elementor-element.elementor-element-a5b3a25 > .e-con-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 12px 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-85cb2d0 {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-bdf90b0 {
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-bdf90b0 img {
+    max-height: 40px !important;
+    width: auto !important;
+  }
+
+  .ekit-template-content-header .elementor-element.elementor-element-d2b9cce {
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+}
+
+/* ==========================================================================
+   Full Width Spread & Removal of Constraining Side Margins for Landing Pages
+   ========================================================================== */
+
+/* 1. Main Content Container Spans Full Screen */
+main#content.site-main,
+.site-main,
+body .site-main,
+body:not([class*=elementor-page-]) .site-main,
+body.wp-singular .site-main {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. Elementor Page Root Wrapper */
+.elementor[data-elementor-type="wp-post"],
+.elementor {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 3. Outer Parent Section Containers (Hero and all subsequent sections) */
+.elementor > .elementor-element.e-parent,
+.elementor > .e-con.e-parent,
+.elementor > .elementor-section {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 4. Inner Section Containers Spread Well Across Width with Responsive Padding */
+.elementor > .elementor-element.e-parent > .e-con-inner,
+.elementor > .e-con.e-parent > .e-con-inner,
+.elementor-section.elementor-section-boxed > .elementor-container,
+.e-con.e-parent > .e-con-inner {
+  width: 100% !important;
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: clamp(20px, 3.5vw, 60px) !important;
+  padding-right: clamp(20px, 3.5vw, 60px) !important;
+  box-sizing: border-box !important;
+}
+
+/* Set Elementor container max width variable across all containers */
+:root,
+.elementor-kit-3,
+.e-con {
+  --container-max-width: 1600px !important;
+}
+
+/* Footer full-width spread alignment */
+.site-footer,
+.site-footer .footer-inner,
+.site-footer:not(.dynamic-footer) {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.ekit-template-content-footer .elementor-element-e21599a > .e-con-inner {
+  max-width: 1600px !important;
+  padding-left: clamp(20px, 3.5vw, 60px) !important;
+  padding-right: clamp(20px, 3.5vw, 60px) !important;
+  margin: 0 auto !important;
+}
+
+/* --- Responsive Adjustments for Tablet (<= 1024px) --- */
+@media (max-width: 1024px) {
+  .elementor > .elementor-element.e-parent > .e-con-inner,
+  .elementor > .e-con.e-parent > .e-con-inner,
+  .elementor-section.elementor-section-boxed > .elementor-container,
+  .e-con.e-parent > .e-con-inner,
+  .ekit-template-content-footer .elementor-element-e21599a > .e-con-inner {
+    max-width: 100% !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+/* --- Responsive Adjustments for Mobile (<= 767px) --- */
+@media (max-width: 767px) {
+  .elementor > .elementor-element.e-parent > .e-con-inner,
+  .elementor > .e-con.e-parent > .e-con-inner,
+  .elementor-section.elementor-section-boxed > .elementor-container,
+  .e-con.e-parent > .e-con-inner,
+  .ekit-template-content-footer .elementor-element-e21599a > .e-con-inner {
+    max-width: 100% !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Prevent any horizontal overflow on mobile */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  .elementor-element {
+    max-width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   Light Grey Harmonization & Typography Overrides for Previously Dark Sections
+   ========================================================================== */
+
+/* 1. Public Layout Base */
+body.wp-singular,
+.wp-singular .site-main,
+.wp-singular .elementor-5,
+.wp-singular.elementor-kit-3 {
+  background-color: #F8F9FB !important;
+  color: #2C2B2B !important;
+}
+
+/* 2. Header Navbar */
+.ekit-template-content-header,
+.ekit-template-content-header .elementor-797,
+.ekit-template-content-header .elementor-element-a5b3a25 {
+  background-color: #FFFFFF !important;
+}
+
+.ekit-template-content-header .elementskit-navbar-nav > li > a {
+  color: #2C2B2B !important;
+}
+
+.ekit-template-content-header .elementskit-navbar-nav > li > a:hover,
+.ekit-template-content-header .elementskit-navbar-nav > li.active > a {
+  color: #0047D6 !important;
+}
+
+/* 3. Hero Section */
+.elementor-5 .elementor-element.elementor-element-f5d6277 {
+  background-color: #F4F5F8 !important;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F4F5F8 100%) !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-f5d6277::before {
+  display: none !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-9e86736 .elementor-heading-title,
+.elementor-5 .elementor-element.elementor-element-ad7fd62 .elementor-heading-title {
+  color: #1A1A2E !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-ea40394 p {
+  color: #4B5563 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-36c4690 .elementor-heading-title {
+  color: #0047D6 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-a97c6cc .ekit-video-popup-btn {
+  color: #1A1A2E !important;
+  border-color: #D1D5DB !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 4. Featured Courses Section */
+.elementor-5 .elementor-element.elementor-element-cf95d48 {
+  background-color: #F0F2F6 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-cf95d48::before {
+  display: none !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-1fdd805 .elementor-heading-title {
+  color: #1A1A2E !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-47656c7 p {
+  color: #4B5563 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-66d8102 .elementor-heading-title {
+  color: #0047D6 !important;
+}
+
+/* Course Cards */
+.elementor-5 .elementor-element.elementor-element-2396a1b,
+.elementor-5 .elementor-element.elementor-element-5d3df34,
+.elementor-5 .elementor-element.elementor-element-491061a {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 24px !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-2396a1b::before,
+.elementor-5 .elementor-element.elementor-element-5d3df34::before,
+.elementor-5 .elementor-element.elementor-element-491061a::before {
+  display: none !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-4cebca3 .elementor-heading-title a,
+.elementor-5 .elementor-element.elementor-element-366d1d4 .elementor-heading-title a,
+.elementor-5 .elementor-element.elementor-element-7a182b5 .elementor-heading-title a {
+  color: #1A1A2E !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-16d8396 .elementor-icon-list-text,
+.elementor-5 .elementor-element.elementor-element-e8bd6e5 .elementor-icon-list-text,
+.elementor-5 .elementor-element.elementor-element-30bc1d4 .elementor-icon-list-text {
+  color: #6B7280 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-b7d081d .elementor-image-box-description,
+.elementor-5 .elementor-element.elementor-element-12c20ef .elementor-image-box-description,
+.elementor-5 .elementor-element.elementor-element-053cf26 .elementor-image-box-description {
+  color: #1A1A2E !important;
+  font-weight: 600 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-b7d081d .elementor-image-box-title,
+.elementor-5 .elementor-element.elementor-element-12c20ef .elementor-image-box-title,
+.elementor-5 .elementor-element.elementor-element-053cf26 .elementor-image-box-title {
+  color: #9CA3AF !important;
+}
+
+/* 5. Why Choose Us Section */
+.elementor-5 .elementor-element.elementor-element-1ec3312 {
+  background-color: #F8F9FB !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-1ec3312::before {
+  display: none !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-2535c43 .elementor-heading-title {
+  color: #1A1A2E !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-346fc1d p {
+  color: #4B5563 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-c872270 .elementor-heading-title {
+  color: #0047D6 !important;
+}
+
+/* Accordion Styling in Why Choose Us */
+.e-n-accordion-item {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 16px !important;
+  margin-bottom: 12px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+}
+
+.e-n-accordion-item-title {
+  padding: 18px 24px !important;
+}
+
+.e-n-accordion-item-title-text {
+  color: #1A1A2E !important;
+  font-weight: 700 !important;
+}
+
+.e-n-accordion-item[open] .e-n-accordion-item-title-text {
+  color: #0047D6 !important;
+}
+
+.e-n-accordion-item p {
+  color: #4B5563 !important;
+}
+
+/* 6. Testimonials Section */
+.elementor-5 .elementor-element.elementor-element-c19c613 {
+  background-color: #F0F2F6 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-c19c613::before {
+  display: none !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-3f1329e .elementor-heading-title {
+  color: #1A1A2E !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-1393fc6 p {
+  color: #4B5563 !important;
+}
+
+.elementor-5 .elementor-element.elementor-element-6c8d0b5 .elementor-heading-title {
+  color: #0047D6 !important;
+}
+
+/* 7. Footer Banner & Footer Elements */
+.elementor-897 .elementor-element.elementor-element-13d5713 {
+  background-color: #F8F9FB !important;
+}
+
+.elementor-897 .elementor-element.elementor-element-e21599a {
+  background-color: #F0F2F6 !important;
+}
+
+.elementor-897 .elementor-element.elementor-element-e21599a::before,
+.elementor-897 .elementor-element.elementor-element-3d248b6::before {
+  display: none !important;
+}
+
+.elementor-897 .elementor-element.elementor-element-3d248b6 {
+  background-color: #E9ECF0 !important;
+}
+
+.elementor-897 .elementor-element.elementor-element-b839e3d .elementor-heading-title {
+  color: #4B5563 !important;
+}
+
+.elementor-897 .elementor-element.elementor-element-e93310d .elementor-heading-title {
+  color: #374151 !important;
+}
+
+/* Header "Get Started" Button Size Optimization */
+.ekit-template-content-header .elementor-element-4025c3f .elementor-button,
+.elementor-element-4025c3f .elementor-button {
+  padding: 10px 22px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 25px !important;
+  line-height: 1.2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.ekit-template-content-header .elementor-element-4025c3f .elementor-button:hover,
+.elementor-element-4025c3f .elementor-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 71, 214, 0.25);
+}
+

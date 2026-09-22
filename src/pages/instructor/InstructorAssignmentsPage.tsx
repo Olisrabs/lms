@@ -107,11 +107,20 @@ export default function InstructorAssignmentsPage() {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState('');
   const selectedSubmission = submissions.find(s => s.id === selectedSubmissionId);
 
-  const filtered = submissions.filter(s =>
-    activeTab === 'pending' ? s.status === 'submitted' || s.status === 'late' || s.status === 'pending' : s.status === 'graded'
-  );
+  const filtered = submissions.filter(s => {
+    const tabMatch = activeTab === 'pending'
+      ? s.status === 'submitted' || s.status === 'late' || s.status === 'pending'
+      : s.status === 'graded';
+    if (!tabMatch) return false;
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const studentName = s.student?.full_name?.toLowerCase() || '';
+    const assignmentTitle = s.assignment?.title?.toLowerCase() || '';
+    return studentName.includes(q) || assignmentTitle.includes(q);
+  });
 
   return (
     <div className="space-y-6">
@@ -150,7 +159,13 @@ export default function InstructorAssignmentsPage() {
           <div className="glass-card rounded-2xl border border-border overflow-hidden">
             <div className="p-4 border-b border-border relative">
               <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-              <input type="text" placeholder="Search student submissions..." className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+              <input 
+                type="text" 
+                placeholder="Search student submissions..." 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" 
+              />
             </div>
             <div className="divide-y divide-border h-[500px] overflow-y-auto">
               {loading ? (

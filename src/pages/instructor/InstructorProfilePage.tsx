@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, MapPin, Building, Camera, Save, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -6,10 +6,28 @@ import { usersApi } from '../../lib/api';
 
 export default function InstructorProfilePage() {
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(() => {
+    return localStorage.getItem(`instructor_avatar_${user?.id}`) || null;
+  });
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = reader.result as string;
+      setAvatarPreview(url);
+      if (user?.id) localStorage.setItem(`instructor_avatar_${user.id}`, url);
+      setSaveMsg({ type: 'success', text: 'Profile photo updated successfully!' });
+      setTimeout(() => setSaveMsg(null), 3000);
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Form fields
   const [firstName, setFirstName] = useState('');
@@ -95,15 +113,29 @@ export default function InstructorProfilePage() {
             <div className="w-28 h-28 rounded-2xl bg-card border-4 border-background flex items-center justify-center shadow-xl overflow-hidden">
               {loading ? (
                 <div className="w-full h-full bg-secondary animate-pulse" />
+              ) : avatarPreview ? (
+                <img src={avatarPreview} alt={fullName} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-3xl">
                   {initials}
                 </div>
               )}
             </div>
-            <button className="absolute bottom-1.5 right-1.5 p-1.5 bg-background border border-border rounded-lg shadow-sm hover:bg-secondary transition-colors">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute bottom-1.5 right-1.5 p-1.5 bg-background border border-border rounded-lg shadow-sm hover:bg-secondary transition-colors cursor-pointer"
+              title="Upload new profile photo"
+            >
               <Camera size={14} />
             </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
           </div>
 
           {/* Name + headline */}

@@ -48,7 +48,7 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
+    <div className="min-h-screen bg-background text-foreground flex dashboard-pattern-bg">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 

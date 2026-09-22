@@ -6,6 +6,25 @@ export default function StudentLessonPage() {
   const [activeTab, setActiveTab] = useState('notes');
   const [isCompleted, setIsCompleted] = useState(false);
   const [searchMaterial, setSearchMaterial] = useState('');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isSaved, setIsSaved] = useState(() => localStorage.getItem('lesson_saved_state') === 'true');
+
+  const toggleSave = () => {
+    const next = !isSaved;
+    setIsSaved(next);
+    if (next) localStorage.setItem('lesson_saved_state', 'true');
+    else localStorage.removeItem('lesson_saved_state');
+  };
+
+  const handlePrevLesson = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNextLesson = () => {
+    setIsCompleted(true);
+    localStorage.setItem('course_1_completed', 'true');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="max-w-7xl mx-auto pb-20">
@@ -26,12 +45,15 @@ export default function StudentLessonPage() {
           <div className="w-full aspect-video bg-black rounded-2xl overflow-hidden relative group shadow-xl">
             {/* Fake Video Player UI */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <button className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center pl-1 shadow-lg hover:scale-110 transition-transform">
+              <button 
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center pl-1 shadow-lg hover:scale-110 transition-transform cursor-pointer"
+              >
                 <PlayIcon size={32} fill="currentColor" />
               </button>
             </div>
             
-            {/* Video Controls Fake */}
+            {/* Video Controls */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="w-full h-1 bg-white/30 rounded-full mb-3 cursor-pointer">
                 <div className="w-1/3 h-full bg-primary rounded-full relative">
@@ -40,8 +62,10 @@ export default function StudentLessonPage() {
               </div>
               <div className="flex items-center justify-between text-white text-sm">
                 <div className="flex items-center gap-4">
-                  <PlayIcon size={20} />
-                  <span>14:20 / 45:00</span>
+                  <button onClick={() => setIsPlaying(!isPlaying)} className="cursor-pointer">
+                    <PlayIcon size={20} />
+                  </button>
+                  <span>{isPlaying ? 'Playing...' : '14:20 / 45:00'}</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span>1x</span>
@@ -63,7 +87,7 @@ export default function StudentLessonPage() {
                   localStorage.removeItem('course_1_completed');
                 }
               }}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-colors ${
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold transition-colors cursor-pointer ${
                 isCompleted 
                   ? 'bg-green-500/10 text-green-500 border border-green-500/20' 
                   : 'bg-primary text-primary-foreground hover:bg-primary/90'
@@ -74,14 +98,27 @@ export default function StudentLessonPage() {
             </button>
             
             <div className="flex items-center gap-3">
-              <button className="p-2.5 bg-secondary text-foreground rounded-xl hover:bg-secondary/80 transition-colors flex items-center gap-2 text-sm font-medium">
-                <BookmarkIcon size={18} /> Save
+              <button 
+                onClick={toggleSave}
+                className={`p-2.5 rounded-xl transition-colors flex items-center gap-2 text-sm font-medium cursor-pointer ${
+                  isSaved ? 'bg-primary/15 text-primary border border-primary/30' : 'bg-secondary text-foreground hover:bg-secondary/80'
+                }`}
+              >
+                <BookmarkIcon size={18} className={isSaved ? 'fill-primary' : ''} /> {isSaved ? 'Saved' : 'Save'}
               </button>
               <div className="flex items-center gap-2">
-                <button className="p-2.5 bg-secondary text-foreground rounded-xl hover:bg-secondary/80 transition-colors">
+                <button 
+                  onClick={handlePrevLesson}
+                  className="p-2.5 bg-secondary text-foreground rounded-xl hover:bg-secondary/80 transition-colors cursor-pointer" 
+                  title="Previous lesson"
+                >
                   <LeftIcon size={20} />
                 </button>
-                <button className="p-2.5 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2 text-sm font-bold">
+                <button 
+                  onClick={handleNextLesson}
+                  className="p-2.5 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2 text-sm font-bold cursor-pointer"
+                  title="Next lesson"
+                >
                   Next <RightIcon size={20} />
                 </button>
               </div>

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  LayoutDashboard, GraduationCap, 
+  LayoutDashboard, 
   FileText, CalendarDays, CheckSquare, Trophy, 
   TrendingUp, Calendar,
   X, ChevronRight, ClipboardCheck, FolderKanban
@@ -31,16 +31,21 @@ export default function InstructorSidebar({ isOpen, setIsOpen }: SidebarProps) {
   return (
     <aside
       className={clsx(
-        "fixed left-0 top-0 bottom-0 w-64 bg-card/50 border-r border-border backdrop-blur-xl z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0",
+        "fixed left-0 top-0 bottom-0 w-64 bg-card/95 border-r border-border/50 backdrop-blur-xl z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
-      <div className="h-16 flex items-center justify-between px-6 border-b border-border shrink-0">
-        <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-foreground">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-primary-foreground">
-            <GraduationCap size={18} />
-          </div>
-          Instructor Hub
+      <div className="h-16 flex items-center justify-between px-5 border-b border-border/50 shrink-0">
+        <div className="flex items-center gap-2.5">
+          <img 
+            src="/logo.PNG" 
+            alt="Make It Simple" 
+            className="h-7 w-auto object-contain" 
+            style={{ maxHeight: '48px', width: 'auto', margin: '0 auto' }} 
+          />
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            Instructor
+          </span>
         </div>
         <button 
           onClick={() => setIsOpen(false)}

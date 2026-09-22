@@ -119,6 +119,33 @@ export default function DashboardOverview() {
     { label: 'Active Capstones',  value: stats.activeCapstones,  icon: Trophy,        color: 'text-purple-500',   bg: 'bg-purple-500/10' },
   ];
 
+  const handleGenerateReport = () => {
+    const cohortName = cohorts.find(c => c.id === selectedCohortId)?.name || 'All Cohorts';
+    const reportDate = new Date().toLocaleDateString();
+    const rows = [
+      ['Make It Simple - Academy Overview Report'],
+      ['Generated On', reportDate],
+      ['Cohort', `"${cohortName}"`],
+      [''],
+      ['Metric', 'Value'],
+      ['Total Enrolled Students', stats.totalStudents],
+      ['Faculty Instructors', stats.totalInstructors],
+      ['Active Cohorts', stats.activeCohorts],
+      ['Upcoming Classes', stats.upcomingClasses],
+      ['Pending Reviews', stats.pendingReviews],
+      ['Active Capstones', stats.activeCapstones],
+    ];
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(r => r.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `academy_report_${cohortName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -156,8 +183,8 @@ export default function DashboardOverview() {
             Refresh
           </button>
           <button 
-            onClick={() => alert('Generating PDF report for ' + (cohorts.find(c => c.id === selectedCohortId)?.name || 'All Cohorts') + '...')}
-            className="bg-primary text-primary-foreground px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 flex items-center gap-2"
+            onClick={handleGenerateReport}
+            className="bg-primary text-primary-foreground px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer"
           >
             <FileText size={16} /> Generate Report
           </button>
@@ -219,7 +246,7 @@ export default function DashboardOverview() {
                         contentStyle={{ backgroundColor: 'var(--card)', borderRadius: '12px', border: '1px solid var(--border)' }}
                         formatter={(v: number) => [`${v}%`, 'Count']}
                       />
-                      <Bar dataKey="rate" name="Projects" fill="#534ab7" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="rate" name="Projects" fill="#0047D6" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>

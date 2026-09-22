@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, UploadCloud, Link as LinkIcon, CheckCircle2, Loader2 } from 'lucide-react';
+import { Trophy, UploadCloud, Link as LinkIcon, CheckCircle2, Loader2, FileCheck, X } from 'lucide-react';
 import { capstonesApi, gradesApi } from '../../lib/api';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -16,12 +16,14 @@ interface Capstone {
 
 export default function StudentCapstonePage() {
   const { user } = useAuth();
+  const fileRef = useRef<HTMLInputElement>(null);
   const [capstone, setCapstone] = useState<Capstone | null>(null);
   const [cohortId, setCohortId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [link, setLink] = useState('');
   const [notes, setNotes] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -55,7 +57,10 @@ export default function StudentCapstonePage() {
       const formData = new FormData();
       formData.append('cohort_id', cohortId);
       formData.append('title', 'Capstone Project');
-      formData.append('description', notes.trim());
+      formData.append('description', `${notes.trim()}${link ? `\n\nProject Link: ${link.trim()}` : ''}`);
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
       await capstonesApi.submit(formData);
       const updated = await capstonesApi.list(cohortId) as Capstone[];
       setCapstone(updated?.[0] || null);
@@ -158,11 +163,42 @@ export default function StudentCapstonePage() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Upload File (Optional)</label>
-              <div className="w-full border-2 border-dashed border-border rounded-xl p-4 text-center hover:bg-secondary/30 transition-colors cursor-pointer text-muted-foreground">
-                <UploadCloud size={24} className="mx-auto mb-2" />
-                <p className="text-xs">Click to upload file (PDF, ZIP, etc.)</p>
+              <label className="text-sm font-medium mb-1 block">Upload Project Archive / File (Optional)</label>
+              <div 
+                onClick={() => fileRef.current?.click()}
+                className="w-full border-2 border-dashed border-border rounded-xl p-4 text-center hover:bg-secondary/30 transition-colors cursor-pointer text-muted-foreground"
+              >
+                {selectedFile ? (
+                  <div className="flex items-center justify-center gap-2 text-primary font-semibold text-xs">
+                    <FileCheck size={20} className="text-green-500" />
+                    <span>{selectedFile.name} ({Math.round(selectedFile.size / 1024)} KB)</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedFile(null);
+                        if (fileRef.current) fileRef.current.value = '';
+                      }}
+                      className="p-1 hover:text-red-500"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <UploadCloud size={24} className="mx-auto mb-2 text-primary" />
+                    <p className="text-xs font-medium">Click to select project file (ZIP, PDF, TAR.GZ)</p>
+                  </>
+                )}
               </div>
+              <input
+                type="file"
+                ref={fileRef}
+                onChange={(e) => {
+                  if (e.target.files?.[0]) setSelectedFile(e.target.files[0]);
+                }}
+                className="hidden"
+              />
             </div>
             {error && <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm">{error}</div>}
             <button

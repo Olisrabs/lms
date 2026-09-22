@@ -26,7 +26,7 @@ export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelec
   const avatarLetter = user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U';
 
   return (
-    <header className="lg:pl-64 fixed top-0 left-0 right-0 z-30 border-b border-border bg-background/95 backdrop-blur-2xl">
+    <header className="lg:pl-64 fixed top-0 left-0 right-0 z-30 border-b border-border/50 bg-card/85 backdrop-blur-2xl shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
       <div className="flex items-center justify-between px-4 sm:px-6 h-16">
         <div className="flex items-center gap-4 flex-1">
           <button 
@@ -36,12 +36,12 @@ export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelec
             <Menu size={20} />
           </button>
           
-          <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-secondary/30 border border-border rounded-xl w-full max-w-md focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+          <div className="hidden sm:flex items-center gap-2.5 px-4 py-2 bg-secondary/50 rounded-full w-full max-w-md focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-card transition-all">
             <Search size={16} className="text-muted-foreground" />
             <input 
               type="text" 
               placeholder="Global Search..." 
-              className="bg-transparent border-none outline-none text-sm w-full"
+              className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelec
               <select
                 value={selectedCohortId || ''}
                 onChange={(e) => onSelectCohort(e.target.value || null)}
-                className="bg-secondary/40 border border-border hover:border-primary/50 text-foreground text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all font-medium cursor-pointer max-w-[150px] sm:max-w-[200px]"
+                className="bg-secondary/50 text-foreground text-sm rounded-full px-4 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all font-medium cursor-pointer max-w-[150px] sm:max-w-[200px] border-none"
               >
                 {cohorts.map((c) => (
                   <option key={c.id} value={c.id} className="bg-background text-foreground">
@@ -67,12 +67,12 @@ export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelec
 
           <ThemeToggle />
 
-          <Link to="/admin/announcements" className="p-2 rounded-xl glass hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-muted-foreground hover:text-foreground relative">
+          <Link to="/admin/announcements" className="p-2 rounded-full hover:bg-secondary/70 transition-colors text-muted-foreground hover:text-foreground relative">
             <Bell size={20} />
             <AnimatePresence>
               <motion.span
                 initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 border-2 border-background"
+                className="absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 border-2 border-background"
               >
                 3
               </motion.span>
@@ -81,13 +81,13 @@ export default function Topbar({ onMenuClick, cohorts, selectedCohortId, onSelec
 
           <div className="relative ml-2">
             <div 
-              className="flex items-center gap-2 p-1 pr-2 rounded-xl glass hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer group"
+              className="flex items-center gap-2 p-1 pr-2.5 rounded-full hover:bg-secondary/70 transition-colors cursor-pointer group"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
-              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-sm shrink-0 group-hover:bg-primary/30 transition-colors">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm shrink-0 group-hover:bg-primary/20 transition-colors">
                 {avatarLetter}
               </div>
-              <ChevronDown size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
+              <ChevronDown size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
 
             <AnimatePresence>
